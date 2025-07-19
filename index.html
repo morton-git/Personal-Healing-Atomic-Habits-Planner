@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人療癒原子習慣計畫本 | 養成好習慣，成就更好的自己 🌿</title>
+    
+    <!-- 基本 SEO 標籤 -->
+    <meta name="description" content="幫助您建立並追蹤個人習慣，提供每日療癒建議，讓養成好習慣變得簡單又有趣。">
+    <meta name="keywords" content="習慣養成, 原子習慣, 個人成長, 自我提升, 習慣追蹤, 療癒, 心靈成長">
+    <meta name="author" content="個人療癒原子習慣計畫本">
+    
+    <!-- 網站圖示 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <!-- 引入 Tailwind CSS CDN，用於快速美觀的樣式設計 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts：Inter 用於通用字體，Noto Sans TC 用於中文，Playfair Display 用於標題斜體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        /* 定義 CSS 變數，方便統一管理顏色和字體 */
+        :root {
+            --primary-bg: #F8F4E3; /* 淺米色 */
+            --secondary-bg: #EAF4E3; /* 淺綠色 */
+            --text-color: #4A4A4A;
+            --header-color: #6B8E23; /* 橄欖綠 */
+            --accent-color: #A2D99A; /* 柔和綠 */
+            --border-color: #D3D3D3;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 基本 body 樣式 */
+        body {
+            font-family: 'Noto Sans TC', 'Inter', sans-serif; /* 優先使用中文，其次英文 */
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* 讓內容從頂部開始排列 */
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* 容器樣式 */
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            padding: 30px;
+            max-width: 800px; /* 最大寬度 */
+            width: 100%; /* 響應式寬度 */
+            display: flex; /* 使用 flexbox 佈局 */
+            flex-direction: column; /* 垂直排列 */
+            gap: 25px; /* 元素間距 */
+        }
+
+        /* 標題樣式 */
+        h1 {
+            color: var(--header-color);
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* 語錄區塊樣式 */
+        .quote-box {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1em;
+            color: var(--header-color);
+            border: 1px solid var(--accent-color);
+            line-height: 1.6;
+        }
+
+        .quote-box span {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text-color);
+        }
+
+        /* 任務區塊標題樣式 */
+        .task-section h2 {
+            color: var(--header-color);
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+
+        /* 任務表格樣式 */
+        .task-table {
+            width: 100%;
+            border-collapse: separate; /* 允許 border-spacing */
+            border-spacing: 0 8px; /* 列間距 */
+        }
+
+        .task-table th, .task-table td {
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .task-table th {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 400;
+            /* 頂部圓角 */
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        /* 任務行單元格樣式 */
+        .task-table td {
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px var(--shadow-light);
+        }
+        
+        /* 任務行 hover 效果 */
+        .task-table tr:hover td {
+            background-color: #FCFBF4; 
+        }
+
+        /* 進度勾選框單元格樣式 */
+        .task-table td:nth-last-child(2) { /* 倒數第二個 td 是進度勾選框 */
+            width: 60px; /* 進度勾選框寬度 */
+            text-align: center;
+        }
+        /* 刪除按鈕單元格樣式 */
+        .task-table td:last-child {
+            width: 40px; /* 刪除按鈕寬度 */
+            text-align: center;
+        }
+
+        /* 任務列表為空時的樣式 */
+        .empty-task-list-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-color);
+            font-style: italic;
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px dashed var(--accent-color);
+        }
+
+
+        /* 勾選框樣式 */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--header-color); /* 改變勾選框顏色 */
+            cursor: pointer;
+            border-radius: 4px; /* 圓角勾選框 */
+        }
+
+        /* 按鈕組樣式 */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap; /* 換行 */
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* 行動按鈕樣式 */
+        .action-button {
+            background-color: var(--header-color);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 30px; /* 圓角按鈕 */
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* 過渡效果 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button:hover {
+            background-color: #557A1F; /* 深一點的綠色 */
+            transform: translateY(-2px); /* 輕微上浮效果 */
+        }
+
+        /* 圖片畫廊樣式 */
+        .image-gallery {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .image-gallery a {
+            display: block; /* 讓連結佔滿整個區塊 */
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--primary-bg);
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transition: all 0.3s ease;
+            font-size: 1.1em; /* 調整字體大小 */
+            font-weight: 500; /* 調整字體粗細 */
+            color: var(--header-color); /* 調整文字顏色 */
+        }
+
+        .image-gallery a:hover {
+            background-color: #FCFBF4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 底部連結樣式 */
+        .footer-links {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.95em;
+        }
+        .footer-links a {
+            color: var(--header-color);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: var(--text-color);
+        }
+
+        /* 設定頁面專用樣式 */
+        #setupPage {
+            padding: 20px;
+            background-color: #fcfbf4;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        #setupPage label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--header-color);
+        }
+
+        #setupPage input[type="text"],
+        #setupPage textarea,
+        #setupPage select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box; /* 確保 padding 不增加寬度 */
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            font-size: 1em;
+            color: var(--text-color);
+        }
+
+        #setupPage textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        #setupPage .checkbox-group {
+            margin-bottom: 15px;
+        }
+
+        #setupPage .checkbox-group label {
+            display: inline-flex; /* 讓 checkbox 和文字在同一行 */
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 5px;
+            font-weight: 400;
+            color: var(--text-color);
+        }
+
+        #setupPage .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+
+        #setupPage button {
+            width: auto;
+            padding: 12px 30px;
+            font-size: 1.2em;
+        }
+
+        /* 隱藏元素 */
+        .hidden {
+            display: none;
+        }
+
+        /* 任務新增彈窗樣式 */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* 半透明背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            color: var(--header-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .modal-content input[type="text"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            font-size: 1em;
+            color: var(--text-color);
+        }
+        /* 錯誤訊息樣式 */
+        .error-message {
+            color: #FF6347; /* 番茄紅 */
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .modal-content .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-content .modal-buttons button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content .modal-buttons .save-button {
+            background-color: var(--header-color);
+            color: white;
+            border: none;
+        }
+
+        .modal-content .modal-buttons .save-button:hover {
+            background-color: #557A1F;
+        }
+
+        .modal-content .modal-buttons .cancel-button {
+            background-color: #ccc;
+            color: var(--text-color);
+            border: none;
+        }
+
+        .modal-content .modal-buttons .cancel-button:hover {
+            background-color: #bbb;
+        }
+        
+        /* 刪除按鈕樣式 */
+        .delete-button {
+            background: none;
+            border: none;
+            color: #FF6347; /* 番茄紅 */
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 0;
+            margin: 0;
+            line-height: 1; /* 確保垂直對齊 */
+        }
+        .delete-button:hover {
+            color: #CC0000;
+        }
+
+        /* 籤詩彈窗內容樣式 */
+        #oracleModal .oracle-content {
+            font-size: 1.2em;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--header-color);
+            font-weight: 600;
+        }
+        #oracleModal .oracle-content p {
+            margin-bottom: 10px;
+        }
+        #oracleModal .oracle-content span {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-color);
+            font-weight: 400;
+            margin-top: 5px;
+        }
+        /* 籤詩主題選項 */
+        #oracleModal .theme-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #oracleModal .theme-options label {
+            background-color: var(--primary-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 400;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+        #oracleModal .theme-options input[type="radio"] {
+            margin-right: 8px;
+            accent-color: var(--header-color);
+            width: 16px;
+            height: 16px;
+        }
+        #oracleModal .theme-options label:hover,
+        #oracleModal .theme-options input[type="radio"]:checked {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        #oracleModal .theme-options input[type="radio"]:checked + span {
+            color: white; /* 確保選中文字是白色 */
+        }
+        #oracleModal .theme-options input[type="radio"]:checked + span::before {
+            content: '✓ ';
+            color: white;
+        }
+
+
+        /* 新增：光點與心情區塊樣式 */
+        .status-section {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: var(--header-color);
+            border: 1px solid var(--accent-color);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        .status-item {
+            flex: 1 1 auto; /* 彈性佈局 */
+            min-width: 120px; /* 最小寬度 */
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        .status-item span {
+            display: block;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-top: 5px;
+            transition: transform 0.2s ease-out; /* 光點動畫過渡 */
+        }
+        .status-item span.pulse-animation {
+            animation: pulse 0.3s ease-out; /* 光點動畫 */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-item.mood {
+            flex-basis: 100%; /* 心情日記佔滿一行 */
+            text-align: left;
+        }
+        .status-item.mood span {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: var(--text-color);
+            margin-top: 0;
+        }
+        .status-item.streak-reason {
+            flex-basis: 100%;
+            text-align: left;
+        }
+        .status-item.streak-reason input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.95em;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        .status-item.streak-reason input::placeholder {
+            color: #A0A0A0;
+        }
+        .status-item.streak-message {
+            flex-basis: 100%;
+            font-size: 0.95em;
+            font-style: italic;
+            color: #6B8E23; /* 橄欖綠 */
+            margin-top: -10px; /* 調整與上方間距 */
+        }
+
+        /* 心情日記彈窗樣式 */
+        #moodModal .modal-content {
+            max-width: 450px;
+        }
+        #moodModal .mood-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        #moodModal .mood-options label {
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 400;
+            color: var(--text-color);
+        }
+        #moodModal .mood-options input[type="radio"] {
+            margin-right: 8px;
+            accent-color: var(--header-color);
+            width: 16px;
+            height: 16px;
+        }
+        #moodModal .mood-options label:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        #moodModal .mood-options input[type="radio"]:checked {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        #moodModal .mood-options input[type="radio"]:checked + span {
+            font-weight: 600;
+            color: white; /* 確保選中文字是白色 */
+        }
+        #moodModal .mood-options input[type="radio"]:checked + span::before {
+            content: '✓ '; /* 選中時前面加個勾 */
+            color: white;
+        }
+        #moodModal textarea {
+            min-height: 80px; /* 調整高度 */
+        }
+
+        /* 過去心情回顧區塊 */
+        .mood-history-section {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            color: var(--header-color);
+            border: 1px solid var(--accent-color);
+        }
+        .mood-history-section h2 {
+            color: var(--header-color);
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+        .mood-history-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .mood-history-section li {
+            padding: 5px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.95em;
+            color: var(--text-color);
+        }
+        .mood-history-section li:last-child {
+            border-bottom: none;
+        }
+        .mood-history-section li strong {
+            color: var(--header-color);
+            margin-right: 8px;
+        }
+
+        /* 複製成功提示訊息 */
+        #copySuccessMessage {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* 綠色 */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #copySuccessMessage.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 設定頁面 -->
+        <div id="setupPage" class="hidden">
+            <h1>歡迎來到個人療癒原子習慣計畫本！📝</h1>
+            <p class="text-center text-lg mb-6 text-gray-600">請告訴我們你的目標與偏好，讓我們為你打造專屬計畫。</p>
+
+            <div class="mb-4">
+                <label for="mainGoal">你主要想完成什麼？ (例如：考取證照、學會新技能、提升收入)</label>
+                <textarea id="mainGoal" placeholder="請描述你的主要目標..." class="rounded-md"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="completionTime">預計在多久時間內完成？</label>
+                <select id="completionTime" class="rounded-md">
+                    <option value="">請選擇</option>
+                    <option value="3m">3 個月內</option>
+                    <option value="6m">6 個月內</option>
+                    <option value="1y">1 年內</option>
+                    <option value="2y+">2 年以上</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label>你希望養成的習慣類型？ (可複選)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="habitType" value="學習"> 學習</label>
+                    <label><input type="checkbox" name="habitType" value="工作"> 工作</label>
+                    <label><input type="checkbox" name="habitType" value="健康"> 健康</label>
+                    <label><input type="checkbox" name="habitType" value="興趣"> 興趣</label>
+                    <label><input type="checkbox" name="habitType" value="副業"> 副業</label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="habitStackingIdeas">你通常在什麼時候比較有空或想做這些事？ (例如：早餐後、午餐後、睡前)</label>
+                <textarea id="habitStackingIdeas" placeholder="請輸入你的習慣堆疊想法..." class="rounded-md"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="restTimePreference">你偏好的每日休息時間是？ (例如：傍晚時段、下午茶時間)</label>
+                <input type="text" id="restTimePreference" placeholder="例如：傍晚時段" class="rounded-md">
+            </div>
+
+            <button id="startPlanButton" class="action-button w-full">開始我的計畫！</button>
+        </div>
+
+        <!-- 主應用程式頁面 -->
+        <div id="mainAppPage" class="hidden">
+            <h1 id="appTitle">個人療癒原子習慣計畫本 🌿</h1> <!-- 標題可以根據用戶輸入調整 -->
+
+            <div class="quote-box">
+                "小步前進，終抵繁星"
+                <span>靈感來自心質點：創造力與堅持，帶你走向目標。</span>
+            </div>
+
+            <!-- 新增：成就光點與心情區塊 -->
+            <div class="status-section">
+                <div class="status-item">
+                    今日心質點 ✨<span id="todayLightPoints">0</span>
+                </div>
+                <div class="status-item">
+                    總累積心質點 🌟<span id="totalLightPoints">0</span>
+                </div>
+                <div class="status-item mood">
+                    今日心情 😊<span id="currentMood">尚未記錄</span>
+                </div>
+                <div class="status-item streak-reason">
+                    連續打勾理由 📝<input type="text" id="streakReasonInput" placeholder="例如：為了更好的自己！">
+                </div>
+                <div class="status-item">
+                    連續打勾天數 🔥<span id="streakDays">0</span>
+                </div>
+                <div class="status-item streak-message">
+                    無論今天心情美不美麗 我們終將會看到人生的彩虹
+                </div>
+            </div>
+
+            <div class="task-section">
+                <h2>每日任務清單</h2>
+                <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>任務 (MVP)</th>
+                            <th>預估時間</th>
+                            <th>習慣堆疊</th>
+                            <th>進度</th>
+                            <th>操作</th> <!-- 新增操作欄位 -->
+                        </tr>
+                    </thead>
+                    <tbody id="taskListBody">
+                        <!-- 任務將由 JavaScript 動態載入 -->
+                    </tbody>
+                </table>
+                <!-- 任務列表為空時的提示訊息 -->
+                <div id="emptyTaskListMessage" class="empty-task-list-message hidden">
+                    您的任務清單目前是空的。點擊「+ 新增任務」按鈕來建立您的第一個習慣！
+                </div>
+            </div>
+
+            <div class="button-group">
+                <!-- 點擊此按鈕將重置所有任務的勾選狀態，模擬新一天的開始 -->
+                <button class="action-button" id="addNewPlanButton">+ 新增今日計畫</button>
+                <!-- 新增一個「新增任務」按鈕 -->
+                <button class="action-button" id="addTaskButton">+ 新增任務</button>
+                <!-- 點擊此按鈕將顯示內部生成的籤詩 -->
+                <button class="action-button" id="iChingButton">✨ 抽取今日靈感籤詩 ✨</button>
+                <!-- 新增一個「記錄心情」按鈕 -->
+                <button class="action-button" id="recordMoodButton">😊 記錄心情</button>
+                <!-- 新增一個重設目標的按鈕，回到設定頁面 -->
+                <button class="action-button" id="resetGoalsButton">重設目標</button>
+                <!-- 新增：輸出專屬今日報告按鈕 -->
+                <button class="action-button" id="exportReportButton">📋 輸出專屬今日報告</button>
+            </div>
+
+            <!-- 圖片畫廊區塊改為連結，預設顯示 -->
+            <div class="image-gallery" id="foodImageGallery">
+                <a href="https://www.pexels.com/zh-tw/search/%E7%BE%8E%E9%A3%9F/" target="_blank" rel="noopener noreferrer">
+                    點擊查看療癒美食圖片
+                </a>
+            </div>
+
+            <div class="image-gallery" id="travelImageGallery">
+                <a href="https://www.pexels.com/zh-tw/search/%E6%99%AF%E9%BB%9E/" target="_blank" rel="noopener noreferrer">
+                    點擊查看旅遊景點圖片
+                </a>
+            </div>
+
+            <!-- 新增：過去心情回顧區塊 -->
+            <div class="mood-history-section hidden" id="moodHistorySection">
+                <h2>過去心情回顧</h2>
+                <ul id="moodHistoryList">
+                    <!-- 歷史心情將由 JavaScript 動態載入 -->
+                </ul>
+            </div>
+            <div class="button-group">
+                <button class="action-button" id="toggleMoodHistoryButton">查看/隱藏過去心情</button>
+            </div>
+
+
+            <div class="footer-links">
+                <!-- 這些連結可以根據通用化需求調整或移除 -->
+                <a href="https://www.instagram.com/adair_morton/" target="_blank">Instagram: @adair_morton</a> | 
+                <a href="mailto:mortonadair@gmail.com">心質點帳號: mortonadair@gmail.com</a> |
+                <a href="https://line.me/ti/p/@610mnriy" target="_blank">官方LINE</a> |
+                <a href="https://forms.gle/MYAMnBpLoChpAsZV9" target="_blank">洽詢表單</a> |
+                <a href="https://www.facebook.com/profile.php?id=61577265854856&amp;mibextid=wwXIfr&amp;rdid=ZTVlfRSgE6d6CtxO&amp;share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BnpPEqYJd%2F%3Fmibextid%3DwwXIfr" target="_blank">Facebook</a> |
+                <a href="https://www.instagram.com/heart_nature_aspect/" target="_blank">Instagram: @heart_nature_aspect</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增任務彈窗 -->
+    <div id="addTaskModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>新增我的任務</h3>
+            <div class="form-group">
+                <label for="newTaskProject">項目：</label>
+                <input type="text" id="newTaskProject" placeholder="例如：學習、工作、健康" class="rounded-md">
+            </div>
+            <div class="form-group">
+                <label for="newTaskName">任務名稱：</label>
+                <textarea id="newTaskName" placeholder="例如：閱讀 1 篇專業文章" class="rounded-md"></textarea>
+            </div>
+            <!-- 新增錯誤訊息顯示區塊 -->
+            <div id="addTaskErrorMessage" class="error-message hidden"></div>
+            <div class="form-group">
+                <label for="newTaskTime">預估時間：</label>
+                <input type="text" id="newTaskTime" placeholder="例如：30 分鐘" class="rounded-md">
+            </div>
+            <div class="form-group">
+                <label for="newTaskStack">習慣堆疊：</label>
+                <input type="text" id="newTaskStack" placeholder="例如：早餐後、午餐後" class="rounded-md">
+            </div>
+            <div class="modal-buttons">
+                <button class="save-button" id="saveTaskButton">儲存任務</button>
+                <button class="cancel-button" id="cancelTaskButton">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增：籤詩顯示彈窗 -->
+    <div id="oracleModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>今日食衣住行心靈籤詩</h3>
+            <div class="theme-options">
+                <label><input type="radio" name="oracleTheme" value="random" checked> <span>隨機</span></label>
+                <label><input type="radio" name="oracleTheme" value="food"> <span>食</span></label>
+                <label><input type="radio" name="oracleTheme" value="clothing"> <span>衣</span></label>
+                <label><input type="radio" name="oracleTheme" value="shelter"> <span>住</span></label>
+                <label><input type="radio" name="oracleTheme" value="transportation"> <span>行</span></label>
+                <label><input type="radio" name="oracleTheme" value="mind"> <span>心</span></label>
+            </div>
+            <div id="oracleContent" class="oracle-content">
+                <!-- 籤詩內容將由 JavaScript 動態生成 -->
+            </div>
+            <div class="modal-buttons">
+                <button class="action-button" id="drawNewOracleButton">再抽一次</button>
+                <button class="save-button" id="closeOracleButton">我知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增：心情日記彈窗 -->
+    <div id="moodModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>記錄今日心情</h3>
+            <div class="mood-options">
+                <label><input type="radio" name="moodEmoji" value="😊"> <span>開心</span></label>
+                <label><input type="radio" name="moodEmoji" value="😌"> <span>平靜</span></label>
+                <label><input type="radio" name="moodEmoji" value="💪"> <span>充滿活力</span></label>
+                <label><input type="radio" name="moodEmoji" value="😴"> <span>有點累</span></label>
+                <label><input type="radio" name="moodEmoji" value="🤔"> <span>思考中</span></label>
+                <label><input type="radio" name="moodEmoji" value="😅"> <span>壓力山大</span></label>
+                <label><input type="radio" name="moodEmoji" value="😢"> <span>難過</span></label>
+            </div>
+            <div class="form-group">
+                <label for="moodTextInput">詳細心情 (選填)：</label>
+                <textarea id="moodTextInput" placeholder="例如：今天完成所有任務，心情超棒！或是：今天有點累，但還是堅持下來了。" class="rounded-md"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="save-button" id="saveMoodButton">儲存心情</button>
+                <button class="cancel-button" id="cancelMoodButton">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 複製成功提示訊息 -->
+    <div id="copySuccessMessage" class="hidden">
+        報告已複製到剪貼簿！
+    </div>
+
+    <script>
+        // 定義預設的每日任務清單
+        const defaultDailyTasks = [
+            { id: 'default1', project: '學習', name: '閱讀 1 篇專業文章', time: '30 分鐘', stack: '早餐後' },
+            { id: 'default2', project: '工作', name: '完成 1 個小專案任務', time: '60 分鐘', stack: '上午時段' },
+            { id: 'default3', project: '健康', name: '進行 20 分鐘輕運動', time: '20 分鐘', stack: '午餐後' },
+            { id: 'default4', project: '個人成長', name: '學習 1 個新軟體功能', time: '20 分鐘', stack: '下午茶時間' },
+            { id: 'default5', project: '生活', name: '整理桌面 10 分鐘', time: '10 分鐘', stack: '睡前' },
+            { id: 'default6', project: '心理健康', name: '進行 5 分鐘正念冥想', time: '5 分鐘', stack: '傍晚時段' }
+        ];
+
+        // 食衣住行心靈籤詩內容
+        const oracleMessages = {
+            food: [
+                "今日宜品嚐異國風味，為生活增添新鮮感。<span>（或許是時候走出舒適區，給味蕾一場小冒險了，你的心渴望一點新奇！）</span>",
+                "簡單家常菜最能暖心，享受平凡的幸福。<span>（不必追求繁複，此刻的溫飽就是最好的慰藉，讓心靈沉澱在熟悉的美好中。）</span>",
+                "今日適合輕食，讓身體感受清爽與活力。<span>（聽聽身體的聲音，它渴望一份輕盈的滋養，你會感到煥然一新。）</span>",
+                "與朋友共享美食，歡樂加倍。<span>（食物因分享而更美味，連結因相聚而更緊密，讓心靈在歡聲笑語中得到滋養。）</span>",
+                "嘗試親手製作一道料理，享受創作的樂趣。<span>（從食材到餐桌，感受親手創造的滿足感，這份專注能療癒你的心。）</span>",
+                "如果感到疲憊，一份甜點或許能為你帶來小小的能量補充。<span>（別忘了，適度的犒賞也是前進的動力，你的心值得被溫柔對待。）</span>",
+                "今日味蕾渴望熟悉，重溫一份記憶中的味道吧。<span>（那份熟悉感，能帶來意想不到的安心與放鬆，讓心靈回到最舒適的港灣。）</span>",
+                "探索巷弄小店，或許會遇見一份驚喜的美味。<span>（生活總有未知的禮物，用心去感受這份期待吧！）</span>",
+                "今日適合與所愛之人共進晚餐，用心感受彼此的陪伴。<span>（餐桌上的溫暖，是心靈最好的滋養。）</span>",
+                "嘗試一份從未吃過的新鮮水果，讓味蕾感受自然的饋贈。<span>（簡單的純粹，也能帶來大大的滿足。）</span>",
+                "如果時間允許，為自己沖泡一杯香醇的咖啡或茶，享受片刻的寧靜。<span>（這份儀式感，能讓心靈找到歸屬。）</span>",
+                "今日可以規劃一場野餐，讓美食與大自然的美景相伴。<span>（在戶外用餐，感受自由與開闊。）</span>",
+                "選擇一份色彩繽紛的沙拉，讓視覺和味覺都得到愉悅。<span>（健康與美好，可以同時擁有。）</span>",
+                "在忙碌中，別忘了為自己準備一份健康的點心，補充能量。<span>（小小的照顧，累積成大大的愛。）</span>",
+                "今日適合品嚐手工製作的糕點，感受那份匠心與溫度。<span>（每一口，都是對生活細節的品味。）</span>",
+                "如果心情低落，一份熱騰騰的湯麵或許能帶來溫暖的慰藉。<span>（食物的力量，有時超乎想像。）</span>",
+                "今日可以嘗試用不同的香料烹飪，為日常增添異國情調。<span>（味蕾的冒險，也是心靈的探索。）</span>",
+                "與家人一起動手做飯，享受共同創造的樂趣。<span>（親情的連結，讓食物更加美味。）</span>",
+                "今日適合清淡飲食，讓身體感受輕盈與無負擔。<span>（給腸胃一個休息的機會，也讓心靈更清明。）</span>",
+                "如果對廚藝沒信心，點一份外賣，讓自己輕鬆享受美食。<span>（放過自己，也是一種療癒。）</span>",
+                "今日可以嘗試一份素食料理，感受植物的純粹能量。<span>（從飲食中，找到與大自然的連結。）</span>",
+                "在用餐時，專注於每一口食物的味道和口感，練習正念飲食。<span>（慢下來，你會發現更多美好。）</span>",
+                "今日適合吃一份冰淇淋，感受那份甜蜜與涼爽的療癒。<span>（偶爾的放縱，也是生活的小確幸。）</span>",
+                "如果對咖啡因敏感，試試花草茶，讓身心得到溫和的舒緩。<span>（溫潤的滋味，能安撫焦躁的心。）</span>",
+                "今日可以學習一道新的菜餚，為自己的廚藝技能加分。<span>（每一次學習，都是對自我的投資。）</span>",
+                "選擇一份當季的食材，感受大自然的節奏與新鮮。<span>（順應自然，心靈也更和諧。）</span>",
+                "今日適合與寵物共享零食時間，感受那份無條件的愛。<span>（簡單的陪伴，帶來巨大的療癒。）</span>",
+                "如果想減輕負擔，試試看斷食，讓身體有時間自我修復。<span>（傾聽身體的智慧，它會告訴你答案。）</span>",
+                "今日可以準備一份便當，為明天的自己省下時間和煩惱。<span>（提前規劃，讓生活更有餘裕。）</span>",
+                "品嚐一份手工麵包，感受那份樸實與溫暖的滋味。<span>（簡單的烘焙，也能帶來心靈的滿足。）</span>",
+                "今日適合嘗試發酵食品，為腸道健康加分。<span>（照顧好身體，是療癒的基礎。）</span>",
+                "如果時間緊迫，一份能量棒或水果也能提供快速補充。<span>（在忙碌中，也要記得關愛自己。）</span>",
+                "今日可以與朋友分享你的拿手菜，讓愛在分享中流動。<span>（分享的快樂，是雙倍的幸福。）</span>",
+                "選擇一份色彩鮮豔的蔬菜，讓餐桌充滿活力。<span>（視覺的享受，也能帶來好心情。）</span>",
+                "今日適合享受一份獨特的早午餐，開啟美好的一天。<span>（為自己創造一份特別的儀式感。）</span>",
+                "如果對甜食有慾望，選擇天然的蜂蜜或水果來滿足。<span>（健康的選擇，也能帶來甜蜜。）</span>",
+                "今日可以嘗試一份無麩質料理，探索新的飲食可能。<span>（開放的心態，能帶來新的發現。）</span>",
+                "在用餐時，關掉電子產品，專注於食物本身和當下。<span>（讓心靈真正地休息和享受。）</span>",
+                "今日適合為自己準備一份營養豐富的早餐，開啟元氣滿滿的一天。<span>（好的開始，是成功的一半。）</span>",
+                "如果對酒精有需求，選擇低酒精或無酒精飲品，享受放鬆而不失清醒。<span>（適度與平衡，是心靈的智慧。）</span>"
+            ],
+            clothing: [
+                "今日宜穿著舒適，自在是最好的風格。<span>（讓身體感受無拘無束，心靈也隨之放鬆，你會發現輕鬆的自己最美。）</span>",
+                "選擇亮色系衣物，為自己帶來好心情。<span>（色彩能影響情緒，給自己一點陽光吧，讓內心也跟著明亮起來！）</span>",
+                "注意天氣變化，適時增減衣物保暖。<span>（照顧好自己，是愛自己的第一步，你的身體值得被細心呵護。）</span>",
+                "搭配一件特別的飾品，展現你的獨特品味。<span>（小小的點綴，就能讓平凡的日常閃閃發光，讓你的心也感受到這份獨特。）</span>",
+                "今日適合簡約穿搭，展現自然之美。<span>（Less is more，簡單也能很有力量，讓心靈回歸純粹的舒適。）</span>",
+                "如果感到煩躁，換上一套柔軟的家居服，享受片刻的慵懶。<span>（讓身體放鬆，心靈才能找到平靜，此刻的你只需要被溫柔包覆。）</span>",
+                "今日可以嘗試不同風格，給自己一個新鮮的形象。<span>（每一次的嘗試，都是對自我的探索，讓心靈也跟著煥然一新。）</span>",
+                "挑選一件讓你感到自信的衣物，讓它成為你今日的幸運符。<span>（當你感到自信，全世界都會為你讓路。）</span>",
+                "今日宜穿著寬鬆，讓身體和心靈都得到舒展。<span>（放鬆的姿態，能帶來內心的自由。）</span>",
+                "選擇天然材質的衣物，感受肌膚與自然的親密接觸。<span>（溫柔的觸感，能安撫焦躁的心。）</span>",
+                "如果心情低落，穿上你最喜歡的衣服，給自己一點儀式感。<span>（外在的改變，也能影響內心的狀態。）</span>",
+                "今日適合整理衣櫃，丟棄不再需要的，為新能量騰出空間。<span>（斷捨離，也是心靈的清理。）</span>",
+                "嘗試將舊衣物重新搭配，創造出新的風格。<span>（創意，能為生活帶來無限可能。）</span>",
+                "今日可以為自己添購一件質感好的內衣，從內而外呵護自己。<span>（看不見的細節，也值得被溫柔對待。）</span>",
+                "選擇一件有故事的古著，感受時間沉澱下的獨特魅力。<span>（每一件物品，都承載著一段故事，也連結著你的心。）</span>",
+                "今日適合穿上運動服，提醒自己該動一動了。<span>（為身體注入活力，心靈也隨之輕盈。）</span>",
+                "如果天氣微涼，披上一條柔軟的披肩，感受那份溫暖的包覆。<span>（小小的溫暖，也能帶來大大的慰藉。）</span>",
+                "今日可以嘗試DIY改造一件舊衣，讓它煥發新生。<span>（親手創造的過程，能帶來意想不到的滿足。）</span>",
+                "選擇一雙舒適的鞋子，讓每一步都輕盈自在。<span>（腳步的輕鬆，能讓心靈也感到自由。）</span>",
+                "今日適合穿上你最喜歡的顏色，讓它成為你今日的能量來源。<span>（色彩的魔力，能點亮你的心情。）</span>",
+                "如果需要出席重要場合，選擇一套讓你感到自信的服裝。<span>（外在的準備，能帶來內心的力量。）</span>",
+                "今日可以嘗試將不同材質的衣物混搭，創造層次感。<span>（探索與實驗，讓生活充滿樂趣。）</span>",
+                "選擇一件有特殊意義的衣物，讓它提醒你重要的時刻。<span>（衣物不僅是穿搭，也是記憶的載體。）</span>",
+                "今日適合穿上寬鬆的棉麻衣物，感受那份自然與透氣。<span>（讓身體自由呼吸，心靈也隨之舒展。）</span>",
+                "如果對穿搭感到困惑，不妨參考一些時尚雜誌或社群媒體尋找靈感。<span>（從他人的創意中，找到屬於自己的風格。）</span>",
+                "今日可以為自己準備一套舒適的睡衣，享受高品質的睡眠。<span>（睡前的儀式感，能帶來一夜好眠。）</span>",
+                "選擇一件有可愛圖案的T恤，讓童心在今日綻放。<span>（保持一顆童心，生活會更有趣。）</span>",
+                "今日適合穿上防風外套，即使天氣多變也能從容應對。<span>（有備無患，讓心靈更安定。）</span>",
+                "如果對環保議題有興趣，可以選擇永續材質的衣物。<span>（為地球盡一份心力，心靈也會感到富足。）</span>",
+                "今日可以嘗試將衣物進行色彩分類，讓衣櫃更整齊。<span>（秩序感，能帶來內心的平靜。）</span>",
+                "選擇一件輕薄的圍巾，為你的穿搭增添一份優雅。<span>（小小的點綴，也能提升整體氣質。）</span>",
+                "今日適合穿上你最喜歡的襪子，讓腳步也充滿樂趣。<span>（從細節處找到快樂，心靈也會感到滿足。）</span>",
+                "如果對過敏體質敏感，選擇無化學添加的衣物。<span>（溫柔對待身體，它會回報你健康。）</span>",
+                "今日可以為自己準備一套適合運動的服裝，隨時準備好動起來。<span>（為健康投資，是最好的回報。）</span>",
+                "選擇一件有特殊紋理的衣物，感受那份獨特的觸感。<span>（觸覺的體驗，也能帶來心靈的愉悅。）</span>",
+                "今日適合穿上你最舒適的內褲，從內而外感受自在。<span>（看不見的舒適，是真正的奢華。）</span>",
+                "如果對時尚趨勢有興趣，可以關注一些設計師品牌。<span>（從美學中，找到靈感與啟發。）</span>",
+                "今日可以嘗試將衣物進行真空收納，節省空間。<span>（整齊的環境，能帶來清爽的心情。）</span>",
+                "選擇一件有紀念意義的衣物，讓它成為你力量的來源。<span>（回憶的溫暖，能給你前行的勇氣。）</span>",
+                "今日適合穿上你最喜歡的帽子，為造型增添一份趣味。<span>（小小的改變，也能帶來大大的不同。）</span>"
+            ],
+            shelter: [
+                "今日宜整理居家環境，讓空間煥然一新。<span>（外在的整潔，能帶來內心的清爽，讓心靈也找到秩序感。）</span>",
+                "在家中點上香氛蠟燭，營造放鬆氛圍。<span>（讓香氣引導你進入一個寧靜的港灣，此刻的心靈需要被溫柔安撫。）</span>",
+                "與家人共度居家時光，享受溫馨片刻。<span>（家的溫暖，是最好的充電站，讓心靈在愛中得到滋養。）</span>",
+                "為家中添置一盆綠植，感受大自然的生機。<span>（一點綠意，就能為生活注入活力，讓心靈也感受到生命的躍動。）</span>",
+                "今日適合安靜獨處，享受家的寧靜。<span>（在自己的小天地裡，找到專屬於你的平靜，此刻的你值得這份寧靜。）</span>",
+                "如果感到壓力，不妨為臥室換個佈置，創造更舒適的睡眠環境。<span>（好的睡眠，是療癒身心的基礎，讓心靈在深層休息中恢復。）</span>",
+                "今日可以為家中添購一件讓自己感到幸福的小物。<span>（小小的改變，也能帶來大大的愉悅，讓心靈被這份幸福感填滿。）</span>",
+                "打開窗戶，讓陽光和微風輕撫你的家，也輕撫你的心。<span>（感受自然的流動，讓心靈得到片刻的自由。）</span>",
+                "今日宜清理雜物，為心靈騰出更多空間。<span>（丟棄不必要的，才能擁抱更美好的。）</span>",
+                "在客廳播放輕柔的音樂，讓旋律溫暖你的心。<span>（音樂是心靈的語言，能帶來深層的放鬆。）</span>",
+                "今日適合在家中進行一次深度清潔，感受煥然一新的舒適。<span>（勞動的汗水，也能洗滌心靈的塵埃。）</span>",
+                "為書房添置一盞溫暖的燈，營造舒適的閱讀氛圍。<span>（光線的溫柔，能讓心靈找到歸屬。）</span>",
+                "今日可以嘗試在家中種植一些香草植物，感受自然的芬芳。<span>（親近自然，是療癒的源泉。）</span>",
+                "如果空間允許，為自己打造一個專屬的冥想角落。<span>（一個專屬的空間，能讓心靈更好地對話。）</span>",
+                "今日適合與寵物在家中玩耍，感受那份純粹的快樂。<span>（牠們的陪伴，是最好的心靈療癒。）</span>",
+                "為浴室添置一些香氛產品，讓沐浴成為一種享受。<span>（洗去疲憊，也洗滌心靈。）</span>",
+                "今日可以嘗試重新佈置家具，為家帶來新鮮感。<span>（小小的改變，也能帶來大大的不同。）</span>",
+                "如果對居家佈置有興趣，可以參考一些設計師的案例。<span>（從美學中，找到生活的靈感。）</span>",
+                "今日適合在陽台或窗邊，享受一杯咖啡或茶，感受片刻的寧靜。<span>（偷得浮生半日閒，心靈也隨之舒展。）</span>",
+                "為廚房添置一些可愛的餐具，讓烹飪更有樂趣。<span>（生活的美好，藏在每個細節中。）</span>",
+                "今日可以嘗試在家中進行一次斷網，享受與世隔絕的寧靜。<span>（遠離喧囂，心靈才能真正地休息。）</span>",
+                "為臥室添置柔軟的床品，讓睡眠質量得到提升。<span>（高品質的休息，是療癒的基礎。）</span>",
+                "今日適合在家中看一部溫馨的電影，讓心靈得到放鬆。<span>（故事的力量，能溫暖人心。）</span>",
+                "如果對收納有困擾，可以學習一些收納技巧，讓家更整潔。<span>（整齊的環境，能帶來清爽的心情。）</span>",
+                "今日可以為家中添購一件藝術品，提升空間的品味。<span>（藝術的薰陶，能滋養心靈。）</span>",
+                "選擇一款舒適的沙發，讓它成為你放鬆身心的最佳場所。<span>（身體的放鬆，能帶來心靈的平靜。）</span>",
+                "今日適合在家中進行一次大掃除，迎接新的開始。<span>（清理舊的，才能迎接新的能量。）</span>",
+                "為餐桌添置一些鮮花，讓用餐氛圍更愉悅。<span>（花朵的美麗，能點亮生活。）</span>",
+                "今日可以嘗試在家中進行一次小型的DIY專案，享受創造的樂趣。<span>（親手創造的滿足感，是無可取代的。）</span>",
+                "如果對風水有興趣，可以學習一些居家風水知識。<span>（順應自然，讓能量流動更順暢。）</span>",
+                "今日適合在浴室泡一個熱水澡，讓身心得到徹底的放鬆。<span>（溫暖的包覆，能洗去一天的疲憊。）</span>",
+                "為玄關添置一個收納櫃，讓進出門更方便。<span>（井然有序，讓生活更從容。）</span>",
+                "今日可以嘗試在家中進行一次冥想或瑜伽練習。<span>（身心的合一，能帶來深層的平靜。）</span>",
+                "為窗邊添置一個舒適的坐墊，享受陽光下的閱讀時光。<span>（簡單的享受，也能帶來大大的幸福。）</span>",
+                "今日適合在家中舉辦一個小型的聚會，與朋友分享快樂。<span>（分享的喜悅，能讓心靈更豐盛。）</span>",
+                "如果對智能家居有興趣，可以為家中添置一些智能設備。<span>（科技的便利，能提升生活品質。）</span>",
+                "今日可以為自己準備一份健康的居家午餐，享受自製的美味。<span>（用心照顧自己，是療癒的開始。）</span>",
+                "為家中的每個角落都注入一份愛與溫暖。<span>（愛的力量，能讓家成為真正的避風港。）</span>",
+                "今日適合在睡前為臥室噴灑助眠噴霧，幫助入睡。<span>（好的睡眠，是心靈恢復的關鍵。）</span>",
+                "如果對植物養護有興趣，可以學習更多關於植物的知識。<span>（與自然連結，心靈也會感到富足。）</span>"
+            ],
+            transportation: [
+                "今日宜步行或騎行，感受城市的美好。<span>（放慢腳步，你會發現更多被忽略的風景，讓心靈在探索中得到放鬆。）</span>",
+                "搭乘大眾運輸工具，享受片刻的閱讀時光。<span>（將通勤時間轉化為自我提升的機會，讓心靈在知識中遨遊。）</span>",
+                "出門前檢查路線，讓行程更順暢。<span>（有準備，才能從容應對，讓心靈減少不必要的焦慮。）</span>",
+                "今日適合慢行，細細品味沿途風景。<span>（生活不只有終點，還有沿途的風景值得欣賞，讓心靈感受當下的美好。）</span>",
+                "注意交通安全，平安是最好的歸途。<span>（無論去哪裡，安全永遠是第一位，你的平安是我們最深的祝福。）</span>",
+                "如果感到煩悶，不妨選擇一條不常走的路，給自己一點新鮮感。<span>（換個視角，或許能看見不同的可能，讓心靈在未知中找到樂趣。）</span>",
+                "今日適合規劃一趟短途旅行，即使只是想像也很好。<span>（為未來儲存能量，為心靈注入期待，讓夢想帶你飛翔。）</span>",
+                "在旅途中，放鬆心情，讓思緒像窗外的風景一樣自由流動。<span>（此刻的你，只需要享受這份流動。）</span>",
+                "今日宜搭乘火車，感受鐵道旅行的浪漫與懷舊。<span>（窗外的風景，是心靈最好的畫布。）</span>",
+                "選擇一條風景優美的徒步路線，讓身體與大自然親密接觸。<span>（汗水與陽光，能洗滌心靈的疲憊。）</span>",
+                "今日適合租借共享單車，輕快地穿梭於城市巷弄間。<span>（自由的風，能吹散心頭的煩悶。）</span>",
+                "如果時間充裕，不妨選擇一條更遠的路線，享受旅途的未知。<span>（每一次的遠行，都是對自我的探索。）</span>",
+                "今日可以規劃一次海邊旅行，感受海風的輕撫與海浪的聲音。<span>（大海的遼闊，能讓心靈得到釋放。）</span>",
+                "選擇一個有特色的小鎮，漫步其中，感受當地的人文氣息。<span>（不同的文化，能帶來新的啟發。）</span>",
+                "今日適合搭乘渡輪，從海上欣賞城市的另一番風貌。<span>（水上的搖曳，能帶來獨特的平靜。）</span>",
+                "如果對歷史有興趣，可以參觀當地的古蹟或博物館。<span>（穿越時空，感受歷史的厚重與智慧。）</span>",
+                "今日可以嘗試搭乘纜車，從高處俯瞰城市全景。<span>（視野的開闊，能讓心靈也感到豁然開朗。）</span>",
+                "選擇一條有挑戰性的登山步道，挑戰自己的體能極限。<span>（征服的快感，能帶來巨大的成就感。）</span>",
+                "今日適合租借電動滑板車，輕鬆遊覽城市。<span>（科技的便利，讓探索更有趣。）</span>",
+                "如果對藝術有興趣，可以參觀當地的藝廊或文創園區。<span>（藝術的薰陶，能滋養心靈。）</span>",
+                "今日可以規劃一次露營，感受星空下的寧靜與自然。<span>（回歸自然，心靈也更純粹。）</span>",
+                "選擇一個有特色的小島，享受遠離塵囂的寧靜。<span>（島嶼的孤獨，也能帶來深層的自我對話。）</span>",
+                "今日適合搭乘觀光巴士，輕鬆遊覽城市的主要景點。<span>（放鬆身心，享受被服務的舒適。）</span>",
+                "如果對美食有追求，可以規劃一趟美食之旅。<span>（味蕾的滿足，是心靈的愉悅。）</span>",
+                "今日可以嘗試搭乘熱氣球，從空中俯瞰大地。<span>（獨特的視角，能帶來震撼的體驗。）</span>",
+                "選擇一條有故事的老街，漫步其中，感受歲月的痕跡。<span>（歷史的沉澱，能帶來心靈的寧靜。）</span>",
+                "今日適合搭乘高鐵，享受快速便捷的旅程。<span>（效率與舒適，可以兼得。）</span>",
+                "如果對攝影有興趣，可以帶上相機，記錄沿途的美景。<span>（捕捉美好，讓心靈充滿感恩。）</span>",
+                "今日可以規劃一次自行車環島，挑戰自己的耐力與毅力。<span>（每一次的堅持，都是對自我的超越。）</span>",
+                "選擇一個有特色的小吃街，品嚐道地的台灣味。<span>（庶民美食，最能溫暖人心。）</span>",
+                "今日適合搭乘計程車，讓自己享受片刻的輕鬆。<span>（適度的放鬆，是為了更好的前行。）</span>",
+                "如果對探險有興趣，可以嘗試一些戶外極限運動。<span>（挑戰極限，能激發內在潛能。）</span>",
+                "今日可以規劃一次溫泉之旅，讓身心得到徹底的放鬆。<span>（溫暖的泉水，能洗去疲憊。）</span>",
+                "選擇一個有特色的小酒館，享受微醺的夜晚。<span>（放鬆身心，與朋友暢談。）</span>",
+                "今日適合搭乘捷運，感受城市的脈動與活力。<span>（快速便捷，讓生活更有效率。）</span>",
+                "如果對音樂有興趣，可以參加一場戶外音樂會。<span>（音樂的魔力，能療癒心靈。）</span>",
+                "今日可以規劃一次農場體驗，感受田園的樂趣。<span>（親近自然，心靈也更純粹。）</span>",
+                "選擇一個有特色的小咖啡館，享受悠閒的下午茶時光。<span>（咖啡的香醇，能帶來片刻的寧靜。）</span>",
+                "今日適合搭乘遊覽車，輕鬆遊覽風景名勝。<span>（舒適的旅程，讓心靈無負擔。）</span>",
+                "如果對動物有興趣，可以參觀動物園或動物保護區。<span>（與動物互動，感受生命的純真。）</span>"
+            ],
+            mind: [ // 新增心靈類別
+                "此刻的你，或許感到有些疲憊，請允許自己好好休息。<span>（你的努力值得被溫柔對待，心靈需要喘息的空間，別讓疲憊累積成負擔。）</span>",
+                "如果心緒不寧，不妨找個安靜的角落，深呼吸三次。<span>（每一次呼吸，都是重新開始的機會，讓心靈歸於平靜，感受當下的安穩。）</span>",
+                "別忘了，你已經很棒了。請給自己一個肯定。<span>（你所做的一切，都值得被看見，你的價值無可取代，請相信自己的光芒。）</span>",
+                "感到迷茫時，回顧一下你最初的目標和熱情。<span>（初心，是引導你前行的光，它能為你照亮方向，重新找到前進的動力。）</span>",
+                "今天，允許自己放下一些不必要的擔憂。<span>（有些事，交給時間會是最好的答案，讓心靈輕盈起來，感受無壓的自由。）</span>",
+                "如果感到孤單，記得你並不孤單，許多人都在為生活努力。<span>（連結與支持，總在你身邊，你的心是溫暖的，永遠有人與你同行。）</span>",
+                "今日，給自己一個微笑，即使只是對著鏡子。<span>（小小的善意，能開啟美好的一天，讓正能量充滿你的心，感染身邊的人。）</span>",
+                "當你感到壓力時，不妨寫下你的感受，讓情緒流動。<span>（文字是心靈的出口，釋放後你會感到輕鬆，找到內在的平靜。）</span>",
+                "允許自己不完美，成長的路上總有跌跌撞撞。<span>（接納此刻的自己，就是最好的開始，每一步都是學習的過程。）</span>",
+                "在忙碌中，為自己保留一個放空的時刻，什麼都不做也很好。<span>（心靈的留白，是為了更好的前行，讓思緒自由飛翔。）</span>",
+                "感受當下的微小幸福，或許是一杯咖啡，或許是一段音樂。<span>（幸福，常常藏在細節裡，用心去發現，你會發現生活處處是美好。）</span>",
+                "你的內在力量遠比你想像的更強大。相信自己。<span>（你擁有克服一切困難的潛能，勇敢地去面對挑戰吧！）</span>",
+                "如果感到焦慮，試著將注意力轉移到一件簡單的事情上，例如觀察窗外的雲朵。<span>（專注於當下，能有效平息內心的波瀾。）</span>",
+                "今天，給自己一個機會去原諒，無論是對自己還是對他人。<span>（放下過去的包袱，心靈才能輕裝前行。）</span>",
+                "當你感到不知所措時，不妨將大問題分解成小步驟。<span>（一步一腳印，你會發現目標其實不遠。）</span>",
+                "今日，試著對遇到的每個人都表達一份善意。<span>（付出愛，你也會收穫愛，讓世界因你而溫暖。）</span>",
+                "如果感到沮喪，回想一下你曾經克服的困難和取得的成就。<span>（你的韌性，是你最寶貴的財富。）</span>",
+                "今天，允許自己犯錯，並從中學習。<span>（錯誤是成長的養分，不必過度苛責自己。）</span>",
+                "當你感到被困住時，不妨換個環境，即使只是換個房間。<span>（環境的改變，能帶來心靈的啟發。）</span>",
+                "今日，試著對自己說一句鼓勵的話。<span>（自我的肯定，是內在力量的源泉。）</span>",
+                "如果感到迷失方向，不妨向信任的朋友或導師尋求建議。<span>（傾聽不同的聲音，能為你帶來新的視角。）</span>",
+                "今天，為自己創造一個美麗的儀式，例如點燃香薰或泡一杯花草茶。<span>（儀式感，能讓平凡的日常充滿意義。）</span>",
+                "當你感到壓力過大時，不妨暫停一下，去散步或接觸大自然。<span>（自然的療癒力，能平復你的心緒。）</span>",
+                "今日，練習感恩，列出三件讓你感到幸福的事情。<span>（感恩的心，能吸引更多美好的事物。）</span>",
+                "如果感到疲憊，不妨為自己安排一個無所事事的下午。<span>（放鬆不是浪費時間，是為了更好的出發。）</span>",
+                "今天，嘗試對自己說「沒關係」。<span>（接納不完美，是心靈自由的第一步。）</span>",
+                "當你感到情緒低落時，不妨聽聽你最喜歡的音樂。<span>（音樂的旋律，能輕撫你的心靈。）</span>",
+                "今日，給予自己一份無條件的愛與接納。<span>（你值得被愛，從自己開始。）</span>",
+                "如果感到困惑，不妨靜坐片刻，讓答案自然浮現。<span>（內在的智慧，總會給你指引。）</span>",
+                "今天，嘗試對一個陌生人微笑。<span>（小小的善意，能點亮彼此的一天。）</span>",
+                "當你感到焦慮時，不妨將注意力集中在你的呼吸上。<span>（呼吸的節奏，能帶你回到當下。）</span>",
+                "今日，允許自己哭泣，釋放累積的情緒。<span>（眼淚是心靈的雨水，洗滌後會更清澈。）</span>",
+                "如果感到孤單，不妨主動聯繫一位久未聯絡的朋友。<span>（人際的連結，能帶來溫暖與支持。）</span>",
+                "今天，為自己準備一份健康的零食，滋養身心。<span>（身體的健康，是心靈的基石。）</span>",
+                "當你感到壓力時，不妨做一些讓你感到快樂的活動。<span>（快樂是最好的解壓劑。）</span>",
+                "今日，練習冥想，讓心靈沉浸在寧靜中。<span>（片刻的寧靜，能帶來深層的療癒。）</span>",
+                "如果感到迷失，不妨回顧你的人生目標和價值觀。<span>（清晰的目標，能指引你的方向。）</span>",
+                "今天，給自己一個放鬆的夜晚，遠離電子產品。<span>（讓心靈有機會真正地休息。）</span>",
+                "當你感到不確定時，不妨相信你的直覺。<span>（內在的聲音，往往是最好的導師。）</span>",
+                "今日，為自己創造一個充滿愛的空間，即使只是角落。<span>（在愛的氛圍中，心靈才能自由綻放。）</span>"
+            ]
+        };
+
+        // 獲取 DOM 元素
+        const setupPage = document.getElementById('setupPage');
+        const mainAppPage = document.getElementById('mainAppPage');
+        const startPlanButton = document.getElementById('startPlanButton');
+        const resetGoalsButton = document.getElementById('resetGoalsButton');
+        const addNewPlanButton = document.getElementById('addNewPlanButton');
+        const addTaskButton = document.getElementById('addTaskButton'); // 新增任務按鈕
+        const iChingButton = document.getElementById('iChingButton'); // 籤詩按鈕
+        const recordMoodButton = document.getElementById('recordMoodButton'); // 記錄心情按鈕
+        const foodImageGallery = document.getElementById('foodImageGallery');
+        const travelImageGallery = document.getElementById('travelImageGallery');
+        const taskListBody = document.getElementById('taskListBody');
+        const appTitle = document.getElementById('appTitle');
+        const emptyTaskListMessage = document.getElementById('emptyTaskListMessage'); // 新增：任務列表為空時的訊息
+
+        const todayLightPointsSpan = document.getElementById('todayLightPoints');
+        const totalLightPointsSpan = document.getElementById('totalLightPoints');
+        const currentMoodSpan = document.getElementById('currentMood');
+        const streakDaysSpan = document.getElementById('streakDays');
+        const streakReasonInput = document.getElementById('streakReasonInput'); // 連續打勾理由輸入框
+
+        const addTaskModal = document.getElementById('addTaskModal'); // 任務新增彈窗
+        const saveTaskButton = document.getElementById('saveTaskButton');
+        const cancelTaskButton = document.getElementById('cancelTaskButton');
+        const newTaskProjectInput = document.getElementById('newTaskProject');
+        const newTaskNameInput = document.getElementById('newTaskName');
+        const newTaskTimeInput = document.getElementById('newTaskTime');
+        const newTaskStackInput = document.getElementById('newTaskStack');
+        const addTaskErrorMessage = document.getElementById('addTaskErrorMessage'); // 新增任務錯誤訊息區塊
+
+        const oracleModal = document.getElementById('oracleModal'); // 籤詩顯示彈窗
+        const oracleContent = document.getElementById('oracleContent');
+        const closeOracleButton = document.getElementById('closeOracleButton');
+        const drawNewOracleButton = document.getElementById('drawNewOracleButton'); // 再抽一次按鈕
+        const oracleThemeRadios = document.querySelectorAll('input[name="oracleTheme"]'); // 籤詩主題選項
+
+        const moodModal = document.getElementById('moodModal'); // 心情日記彈窗
+        const moodTextInput = document.getElementById('moodTextInput');
+        const saveMoodButton = document.getElementById('saveMoodButton');
+        const cancelMoodButton = document.getElementById('cancelMoodButton');
+        const moodEmojiRadios = document.querySelectorAll('input[name="moodEmoji"]'); // 心情表情選項
+
+        const moodHistorySection = document.getElementById('moodHistorySection'); // 過去心情回顧區塊
+        const moodHistoryList = document.getElementById('moodHistoryList'); // 歷史心情列表
+        const toggleMoodHistoryButton = document.getElementById('toggleMoodHistoryButton'); // 查看/隱藏歷史心情按鈕
+        
+        const exportReportButton = document.getElementById('exportReportButton'); // 輸出報告按鈕
+        const copySuccessMessage = document.getElementById('copySuccessMessage'); // 複製成功提示訊息
+
+
+        /**
+         * 顯示指定頁面，隱藏其他頁面。
+         * @param {string} pageId - 要顯示的頁面 ID ('setupPage' 或 'mainAppPage')。
+         */
+        function showPage(pageId) {
+            setupPage.classList.add('hidden');
+            mainAppPage.classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        /**
+         * 檢查是否需要重置每日數據（光點、心情、連續天數）。
+         * 如果日期不同，則重置今日光點和心情，並更新連續天數。
+         */
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            const lastVisitDate = localStorage.getItem('lastVisitDate');
+            let streakDays = parseInt(localStorage.getItem('streakDays')) || 0;
+            let streakReason = localStorage.getItem('streakReason') || '';
+            let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            const dailyMood = JSON.parse(localStorage.getItem('dailyMood')); // 獲取當前日期的心情
+
+            if (lastVisitDate !== today) {
+                // 如果是新的一天
+                const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toDateString();
+                
+                // 如果昨天有記錄心情，則將其加入歷史記錄
+                if (dailyMood && dailyMood.date === lastVisitDate) {
+                    moodHistory.push(dailyMood);
+                    // 只保留最近7天的歷史記錄
+                    if (moodHistory.length > 7) {
+                        moodHistory = moodHistory.slice(moodHistory.length - 7);
+                    }
+                    localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+                }
+
+                if (lastVisitDate === yesterday) {
+                    // 如果是連續的第二天，增加連續天數
+                    streakDays++;
+                } else {
+                    // 如果不是連續的第二天，重置連續天數和理由
+                    streakDays = 1; // 新的一天開始，至少為1天
+                    streakReason = ''; // 連續中斷，理由清空
+                }
+                localStorage.setItem('streakDays', streakDays);
+                localStorage.setItem('streakReason', streakReason); // 保存理由狀態
+
+                // 重置今日光點和心情
+                localStorage.setItem('todayLightPoints', 0);
+                localStorage.removeItem('dailyMood'); // 清空昨日心情
+            }
+            localStorage.setItem('lastVisitDate', today); // 更新最後訪問日期
+            updateStatusDisplay(); // 更新顯示
+            displayMoodHistory(); // 更新歷史心情顯示
+        }
+
+        /**
+         * 載入任務到 UI 並從本地儲存中恢復勾選狀態。
+         * 優先載入用戶自定義任務，如果沒有則載入預設任務。
+         */
+        function loadTasks() {
+            taskListBody.innerHTML = ''; // 清空現有任務
+            const savedTaskStates = JSON.parse(localStorage.getItem('dailyTaskStates')) || {};
+            const userSettings = JSON.parse(localStorage.getItem('userSettings'));
+            let currentTasks = JSON.parse(localStorage.getItem('userDefinedTasks')) || []; // 嘗試載入用戶自定義任務
+
+            // 如果沒有用戶自定義任務，則將預設任務複製到 userDefinedTasks
+            // 這樣用戶就可以在主頁面刪除或新增這些任務
+            if (currentTasks.length === 0) {
+                currentTasks = [...defaultDailyTasks]; // 使用展開運算符複製，避免修改原始預設任務
+                localStorage.setItem('userDefinedTasks', JSON.stringify(currentTasks)); // 將預設任務保存為用戶任務
+            }
+
+            if (currentTasks.length === 0) {
+                // 如果任務列表為空，顯示提示訊息
+                emptyTaskListMessage.classList.remove('hidden');
+            } else {
+                emptyTaskListMessage.classList.add('hidden');
+                currentTasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${task.project}</td>
+                        <td>${task.name}</td>
+                        <td>${task.time}</td>
+                        <td>${task.stack}</td>
+                        <td><input type="checkbox" id="${task.id}" data-task-id="${task.id}" ${savedTaskStates[task.id] ? 'checked' : ''}></td>
+                        <td><button class="delete-button" data-task-id="${task.id}">✖</button></td>
+                    `;
+                    taskListBody.appendChild(row);
+                });
+            }
+
+            // 根據用戶設定調整顯示
+            if (userSettings) {
+                // 更新應用程式主標題，優先顯示用戶設定的目標，否則顯示新的預設名稱
+                appTitle.textContent = userSettings.mainGoal ? `${userSettings.mainGoal.split('\n')[0]}` : `個人療癒原子習慣計畫本 🌿`;
+
+                // 這些功能現在預設顯示，不再根據 userSettings 隱藏
+                iChingButton.classList.remove('hidden');
+                foodImageGallery.classList.remove('hidden');
+                travelImageGallery.classList.remove('hidden');
+            } else {
+                // 如果沒有設定，預設都顯示，並使用新的預設名稱
+                appTitle.textContent = `個人療癒原子習慣計畫本 🌿`;
+                iChingButton.classList.remove('hidden');
+                foodImageGallery.classList.remove('hidden');
+                travelImageGallery.classList.remove('hidden');
+            }
+            updateStatusDisplay(); // 載入任務後更新狀態顯示
+        }
+
+        /**
+         * 將任務的勾選狀態儲存到本地儲存，並更新光點。
+         * @param {string} taskId - 任務的唯一 ID。
+         * @param {boolean} isChecked - 任務是否被勾選。
+         */
+        function saveTaskState(taskId, isChecked) {
+            try {
+                const savedTaskStates = JSON.parse(localStorage.getItem('dailyTaskStates')) || {};
+                savedTaskStates[taskId] = isChecked;
+                localStorage.setItem('dailyTaskStates', JSON.stringify(savedTaskStates));
+                console.log(`任務 ${taskId} 狀態已保存: ${isChecked}`);
+
+                // 更新光點
+                let todayLightPoints = parseInt(localStorage.getItem('todayLightPoints')) || 0;
+                let totalLightPoints = parseInt(localStorage.getItem('totalLightPoints')) || 0;
+
+                const targetSpan = todayLightPointsSpan; // 今日光點的 span 元素
+
+                if (isChecked) {
+                    todayLightPoints++;
+                    totalLightPoints++;
+                } else {
+                    // 如果取消勾選，則減少光點，但不能低於0
+                    todayLightPoints = Math.max(0, todayLightPoints - 1);
+                    totalLightPoints = Math.max(0, totalLightPoints - 1);
+                }
+                localStorage.setItem('todayLightPoints', todayLightPoints);
+                localStorage.setItem('totalLightPoints', totalLightPoints);
+                
+                // 添加動畫效果
+                targetSpan.classList.remove('pulse-animation'); // 移除舊動畫
+                void targetSpan.offsetWidth; // 強制重繪
+                targetSpan.classList.add('pulse-animation'); // 添加新動畫
+
+                updateStatusDisplay(); // 更新顯示
+            } catch (error) {
+                console.error("儲存任務狀態時發生錯誤:", error);
+            }
+        }
+
+        /**
+         * 重置所有任務的勾選狀態並清除本地儲存。
+         * 模擬「新增今日計畫」功能。
+         */
+        function resetTasks() {
+            try {
+                localStorage.removeItem('dailyTaskStates'); // 移除所有任務狀態
+                localStorage.setItem('todayLightPoints', 0); // 重置今日光點
+                localStorage.removeItem('dailyMood'); // 重置今日心情
+                localStorage.removeItem('streakReason'); // 重置理由
+                
+                // 注意：這裡不重置 streakDays，因為它在 checkDailyReset 中根據日期自動判斷是否連續
+                
+                loadTasks(); // 重新載入任務，此時所有勾選框都會是未勾選狀態
+                updateStatusDisplay(); // 更新顯示
+                console.log("所有任務狀態已重置。");
+            } catch (error) {
+                console.error("重置任務時發生錯誤:", error);
+            }
+        }
+
+        /**
+         * 更新光點、心情、連續打勾天數的顯示。
+         */
+        function updateStatusDisplay() {
+            const todayLightPoints = parseInt(localStorage.getItem('todayLightPoints')) || 0;
+            const totalLightPoints = parseInt(localStorage.getItem('totalLightPoints')) || 0;
+            const dailyMood = JSON.parse(localStorage.getItem('dailyMood'));
+            const streakDays = parseInt(localStorage.getItem('streakDays')) || 0;
+            const streakReason = localStorage.getItem('streakReason') || '';
+
+            todayLightPointsSpan.textContent = todayLightPoints;
+            totalLightPointsSpan.textContent = totalLightPoints;
+            
+            if (dailyMood && dailyMood.date === new Date().toDateString()) {
+                currentMoodSpan.textContent = `${dailyMood.emoji} ${dailyMood.text}`;
+            } else {
+                currentMoodSpan.textContent = '尚未記錄';
+            }
+
+            if (streakDays > 0) {
+                streakDaysSpan.textContent = `${streakDays} 天`;
+            } else {
+                streakDaysSpan.textContent = '目前沒有連續打勾';
+            }
+            streakReasonInput.value = streakReason; // 更新理由輸入框
+        }
+
+        /**
+         * 顯示新增任務彈窗。
+         */
+        function showAddTaskModal() {
+            addTaskModal.classList.remove('hidden');
+            // 清空表單欄位並隱藏錯誤訊息
+            newTaskProjectInput.value = '';
+            newTaskNameInput.value = '';
+            newTaskTimeInput.value = '';
+            newTaskStackInput.value = '';
+            addTaskErrorMessage.classList.add('hidden'); // 隱藏錯誤訊息
+            addTaskErrorMessage.textContent = ''; // 清空錯誤訊息內容
+        }
+
+        /**
+         * 隱藏新增任務彈窗。
+         */
+        function hideAddTaskModal() {
+            addTaskModal.classList.add('hidden');
+        }
+
+        /**
+         * 儲存新任務到本地儲存。
+         */
+        function saveNewTask() {
+            const project = newTaskProjectInput.value.trim();
+            const name = newTaskNameInput.value.trim();
+            const time = newTaskTimeInput.value.trim();
+            const stack = newTaskStackInput.value.trim();
+
+            if (!name) {
+                // 顯示錯誤訊息在 UI 上
+                addTaskErrorMessage.textContent = "任務名稱不能為空！";
+                addTaskErrorMessage.classList.remove('hidden');
+                return;
+            } else {
+                addTaskErrorMessage.classList.add('hidden'); // 如果有效則隱藏錯誤訊息
+                addTaskErrorMessage.textContent = '';
+            }
+
+            const newTask = {
+                id: `user-${Date.now()}`, // 為用戶自定義任務生成唯一 ID
+                project: project || '未分類', // 如果項目為空，則預設為「未分類」
+                name: name,
+                time: time || '未設定',
+                stack: stack || '未設定'
+            };
+
+            let userDefinedTasks = JSON.parse(localStorage.getItem('userDefinedTasks')) || [];
+            userDefinedTasks.push(newTask);
+            localStorage.setItem('userDefinedTasks', JSON.stringify(userDefinedTasks));
+
+            hideAddTaskModal();
+            loadTasks(); // 重新載入任務列表以顯示新任務
+        }
+
+        /**
+         * 刪除指定任務。
+         * @param {string} taskId - 要刪除的任務 ID。
+         */
+        function deleteTask(taskId) {
+            let userDefinedTasks = JSON.parse(localStorage.getItem('userDefinedTasks')) || [];
+            
+            // 過濾掉要刪除的任務，現在允許刪除所有任務
+            userDefinedTasks = userDefinedTasks.filter(task => task.id !== taskId);
+
+            localStorage.setItem('userDefinedTasks', JSON.stringify(userDefinedTasks));
+
+            // 同步移除該任務的勾選狀態
+            const savedTaskStates = JSON.parse(localStorage.getItem('dailyTaskStates')) || {};
+            delete savedTaskStates[taskId];
+            localStorage.setItem('dailyTaskStates', JSON.stringify(savedTaskStates));
+
+            loadTasks(); // 重新載入任務列表
+        }
+
+        /**
+         * 生成今日食衣住行心靈籤詩。
+         * @param {string} theme - 籤詩主題 (food, clothing, shelter, transportation, mind, or random)。
+         * @returns {string} 籤詩內容。
+         */
+        function generateFortuneCookieOracle(theme = 'random') {
+            let selectedTheme = theme;
+            if (theme === 'random') {
+                const themes = Object.keys(oracleMessages);
+                selectedTheme = themes[Math.floor(Math.random() * themes.length)];
+            }
+            
+            const messages = oracleMessages[selectedTheme];
+            if (!messages || messages.length === 0) {
+                return "今天沒有特別的靈感，但請相信美好即將發生。<span>（生活總有驚喜，用心去感受。）</span>";
+            }
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        /**
+         * 顯示籤詩彈窗。
+         * @param {string} initialTheme - 首次打開彈窗時的預設主題。
+         */
+        function showOracleModal(initialTheme = 'random') {
+            // 預設選中傳入的主題
+            document.querySelector(`input[name="oracleTheme"][value="${initialTheme}"]`).checked = true;
+            // 確保選中狀態的樣式更新
+            document.querySelectorAll('.theme-options label').forEach(label => {
+                const radio = label.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+
+            // 根據選中的主題生成籤詩
+            const selectedTheme = document.querySelector('input[name="oracleTheme"]:checked').value;
+            const oracle = generateFortuneCookieOracle(selectedTheme);
+            oracleContent.innerHTML = `
+                <p>${oracle}</p>
+                <span>（此為生活小提示，祝您有個美好的一天！）</span>
+            `;
+            oracleModal.classList.remove('hidden');
+        }
+
+        /**
+         * 隱藏籤詩彈窗。
+         */
+        function hideOracleModal() {
+            oracleModal.classList.add('hidden');
+        }
+
+        /**
+         * 顯示心情日記彈窗。
+         */
+        function showMoodModal() {
+            const dailyMood = JSON.parse(localStorage.getItem('dailyMood'));
+            // 清除所有選中的表情選項
+            moodEmojiRadios.forEach(radio => radio.checked = false);
+            document.querySelectorAll('.mood-options label').forEach(label => label.classList.remove('selected'));
+
+            if (dailyMood && dailyMood.date === new Date().toDateString()) {
+                // 如果今天已經記錄過心情，則顯示已記錄的內容
+                moodTextInput.value = dailyMood.text;
+                const selectedEmojiRadio = document.querySelector(`input[name="moodEmoji"][value="${dailyMood.emoji}"]`);
+                if (selectedEmojiRadio) {
+                    selectedEmojiRadio.checked = true;
+                    selectedEmojiRadio.closest('label').classList.add('selected');
+                }
+            } else {
+                moodTextInput.value = ''; // 否則清空
+            }
+            moodModal.classList.remove('hidden');
+        }
+
+        /**
+         * 隱藏心情日記彈窗。
+         */
+        function hideMoodModal() {
+            moodModal.classList.add('hidden');
+        }
+
+        /**
+         * 儲存心情日記。
+         */
+        function saveMood() {
+            const selectedEmoji = document.querySelector('input[name="moodEmoji"]:checked');
+            const emoji = selectedEmoji ? selectedEmoji.value : '';
+            const moodText = moodTextInput.value.trim();
+
+            if (emoji || moodText) { // 只要有選表情或有輸入文字就儲存
+                const moodData = {
+                    date: new Date().toDateString(),
+                    emoji: emoji,
+                    text: moodText
+                };
+                localStorage.setItem('dailyMood', JSON.stringify(moodData));
+                updateStatusDisplay(); // 更新心情顯示
+            }
+            hideMoodModal();
+        }
+
+        /**
+         * 顯示過去的心情歷史記錄。
+         */
+        function displayMoodHistory() {
+            moodHistoryList.innerHTML = ''; // 清空列表
+            const moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+
+            if (moodHistory.length === 0) {
+                moodHistoryList.innerHTML = '<li>目前沒有過去的心情記錄。</li>';
+                return;
+            }
+
+            // 倒序顯示，最新的在最上面
+            moodHistory.slice().reverse().forEach(mood => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${mood.date}：</strong>${mood.emoji} ${mood.text}`;
+                moodHistoryList.appendChild(listItem);
+            });
+        }
+
+        /**
+         * 生成並複製今日報告文字到剪貼簿。
+         */
+        function generateAndCopyReport() {
+            const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+            const userSettings = JSON.parse(localStorage.getItem('userSettings')) || {};
+            const todayLightPoints = parseInt(localStorage.getItem('todayLightPoints')) || 0;
+            const totalLightPoints = parseInt(localStorage.getItem('totalLightPoints')) || 0;
+            const dailyMood = JSON.parse(localStorage.getItem('dailyMood'));
+            const streakDays = parseInt(localStorage.getItem('streakDays')) || 0;
+            const streakReason = localStorage.getItem('streakReason') || '';
+            const currentTasks = JSON.parse(localStorage.getItem('userDefinedTasks')) || [];
+            const savedTaskStates = JSON.parse(localStorage.getItem('dailyTaskStates')) || {};
+            const moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+
+            let reportText = `個人療癒原子習慣計畫本 - 今日報告\n`;
+            reportText += `日期：${today}\n`;
+            reportText += `========================================\n\n`;
+
+            reportText += `【今日語錄】\n`;
+            reportText += `"小步前進，終抵繁星"\n`;
+            reportText += `靈感來自心質點：創造力與堅持，帶你走向目標。\n\n`;
+
+            reportText += `【今日狀態】\n`;
+            reportText += `今日心質點：${todayLightPoints} ✨\n`;
+            reportText += `總累積心質點：${totalLightPoints} 🌟\n`;
+            reportText += `今日心情：${dailyMood ? `${dailyMood.emoji} ${dailyMood.text}` : '尚未記錄'}\n`;
+            reportText += `連續打勾天數：${streakDays > 0 ? `${streakDays} 天 🔥` : '目前沒有連續打勾'}\n`;
+            if (streakReason) {
+                reportText += `連續打勾理由：${streakReason} 📝\n`;
+            }
+            reportText += `心情小語：無論今天心情美不美麗 我們終將會看到人生的彩虹\n\n`;
+
+            reportText += `【每日任務清單】\n`;
+            if (currentTasks.length > 0) {
+                currentTasks.forEach((task, index) => {
+                    const status = savedTaskStates[task.id] ? '✅ 完成' : '❌ 未完成';
+                    reportText += `${index + 1}. 項目: ${task.project}\n`;
+                    reportText += `   任務: ${task.name}\n`;
+                    reportText += `   預估時間: ${task.time}\n`;
+                    reportText += `   習慣堆疊: ${task.stack}\n`;
+                    reportText += `   狀態: ${status}\n`;
+                    reportText += `----------------------------------------\n`;
+                });
+            } else {
+                reportText += `您的任務清單目前是空的。\n`;
+            }
+            reportText += `\n`;
+
+            reportText += `【過去心情回顧】\n`;
+            if (moodHistory.length > 0) {
+                moodHistory.slice().reverse().forEach(mood => { // 倒序顯示
+                    reportText += `日期: ${mood.date} - 心情: ${mood.emoji} ${mood.text}\n`;
+                });
+            } else {
+                reportText += `目前沒有過去的心情記錄。\n`;
+            }
+            reportText += `\n`;
+
+            reportText += `========================================\n`;
+            reportText += `「個人療癒原子習慣計畫本」祝您持續成長！\n`;
+            reportText += `更多療癒：\n`;
+            reportText += `療癒美食圖片：https://www.pexels.com/zh-tw/search/%E7%BE%8E%E9%A3%9F/\n`;
+            reportText += `旅遊景點圖片：https://www.pexels.com/zh-tw/search/%E6%99%AF%E9%BB%9E/\n`;
+
+            // 嘗試複製到剪貼簿
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = reportText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccessMessage(); // 顯示成功訊息
+                console.log('報告已成功複製到剪貼簿。');
+            } catch (err) {
+                console.error('無法複製報告到剪貼簿:', err);
+                // 可以考慮在這裡提供一個提示，讓用戶手動複製
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        /**
+         * 顯示複製成功提示訊息。
+         */
+        function showCopySuccessMessage() {
+            copySuccessMessage.classList.remove('hidden');
+            copySuccessMessage.classList.add('show');
+            setTimeout(() => {
+                copySuccessMessage.classList.remove('show');
+                copySuccessMessage.classList.add('hidden');
+            }, 2000); // 2秒後隱藏
+        }
+
+
+        // 頁面載入完成後執行
+        document.addEventListener('DOMContentLoaded', () => {
+            // 每次載入先檢查是否需要重置每日數據
+            checkDailyReset();
+
+            const userSettings = localStorage.getItem('userSettings');
+            if (userSettings) {
+                // 如果有用戶設定，直接進入主應用程式頁面
+                showPage('mainAppPage');
+                loadTasks();
+            } else {
+                // 如果沒有用戶設定，顯示設定頁面
+                showPage('setupPage');
+            }
+
+            // 「開始我的計畫」按鈕事件監聽器
+            startPlanButton.addEventListener('click', () => {
+                const mainGoal = document.getElementById('mainGoal').value;
+                const completionTime = document.getElementById('completionTime').value;
+                const habitTypes = Array.from(document.querySelectorAll('input[name="habitType"]:checked')).map(cb => cb.value);
+                const habitStackingIdeas = document.getElementById('habitStackingIdeas').value;
+                const restTimePreference = document.getElementById('restTimePreference').value;
+                
+                const enableIChing = true; // 預設為 true
+                const showFoodImages = true; // 預設為 true
+                const showTravelImages = true; // 預設為 true
+
+                const settings = {
+                    mainGoal,
+                    completionTime,
+                    habitTypes,
+                    habitStackingIdeas,
+                    restTimePreference,
+                    enableIChing,
+                    showFoodImages,
+                    showTravelImages
+                };
+                localStorage.setItem('userSettings', JSON.stringify(settings));
+
+                // 如果用戶沒有自定義任務，則將預設任務複製到 userDefinedTasks
+                // 這樣用戶就可以在主頁面刪除或新增這些任務
+                let userDefinedTasks = JSON.parse(localStorage.getItem('userDefinedTasks')) || [];
+                if (userDefinedTasks.length === 0) {
+                    localStorage.setItem('userDefinedTasks', JSON.stringify(defaultDailyTasks));
+                }
+
+                showPage('mainAppPage');
+                loadTasks(); // 根據新設定載入任務
+                updateStatusDisplay(); // 更新顯示
+            });
+
+            // 為「新增今日計畫」按鈕添加事件監聽器
+            addNewPlanButton.addEventListener('click', resetTasks);
+
+            // 為「新增任務」按鈕添加事件監聽器
+            addTaskButton.addEventListener('click', showAddTaskModal);
+
+            // 為「儲存任務」按鈕添加事件監聽器
+            saveTaskButton.addEventListener('click', saveNewTask);
+
+            // 為「取消」按鈕添加事件監聽器
+            cancelTaskButton.addEventListener('click', hideAddTaskModal);
+
+            // 為「抽取今日靈感籤詩」按鈕添加事件監聽器
+            iChingButton.addEventListener('click', () => showOracleModal('random')); // 點擊按鈕預設隨機
+
+            // 為籤詩彈窗的「再抽一次」按鈕添加事件監聽器
+            drawNewOracleButton.addEventListener('click', () => {
+                const selectedTheme = document.querySelector('input[name="oracleTheme"]:checked').value;
+                const oracle = generateFortuneCookieOracle(selectedTheme);
+                oracleContent.innerHTML = `<p>${oracle}</p><span>（此為生活小提示，祝您有個美好的一天！）</span>`;
+            });
+
+            // 為籤詩主題選項添加事件監聽器，即時更新籤詩內容
+            oracleThemeRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    document.querySelectorAll('.theme-options label').forEach(label => label.classList.remove('selected'));
+                    if (event.target.checked) {
+                        event.target.closest('label').classList.add('selected');
+                    }
+                    const selectedTheme = event.target.value;
+                    const oracle = generateFortuneCookieOracle(selectedTheme);
+                    oracleContent.innerHTML = `<p>${oracle}</p><span>（此為生活小提示，祝您有個美好的一天！）</span>`;
+                });
+            });
+
+            // 為籤詩彈窗的「我知道了」按鈕添加事件監聽器
+            closeOracleButton.addEventListener('click', hideOracleModal);
+
+            // 為「記錄心情」按鈕添加事件監聽器
+            recordMoodButton.addEventListener('click', showMoodModal);
+
+            // 為心情日記彈窗的「儲存心情」按鈕添加事件監聽器
+            saveMoodButton.addEventListener('click', saveMood);
+
+            // 為心情日記彈窗的「取消」按鈕添加事件監聽器
+            cancelMoodButton.addEventListener('click', hideMoodModal);
+
+            // 為心情表情選項添加事件監聽器，實現選中樣式
+            moodEmojiRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    document.querySelectorAll('.mood-options label').forEach(label => label.classList.remove('selected'));
+                    if (event.target.checked) {
+                        event.target.closest('label').classList.add('selected');
+                    }
+                });
+            });
+
+            // 為連續打勾理由輸入框添加事件監聽器，實時保存
+            streakReasonInput.addEventListener('input', (event) => {
+                localStorage.setItem('streakReason', event.target.value);
+            });
+
+            // 為查看/隱藏過去心情按鈕添加事件監聽器
+            toggleMoodHistoryButton.addEventListener('click', () => {
+                moodHistorySection.classList.toggle('hidden');
+                displayMoodHistory(); // 每次顯示時重新載入，確保最新
+            });
+
+            // 為「輸出專屬今日報告」按鈕添加事件監聽器
+            exportReportButton.addEventListener('click', generateAndCopyReport);
+
+
+            // 為任務列表的勾選框和刪除按鈕添加事件委託
+            taskListBody.addEventListener('change', (event) => {
+                if (event.target.type === 'checkbox' && event.target.dataset.taskId) {
+                    saveTaskState(event.target.dataset.taskId, event.target.checked);
+                }
+            });
+
+            taskListBody.addEventListener('click', (event) => {
+                if (event.target.classList.contains('delete-button') && event.target.dataset.taskId) {
+                    deleteTask(event.target.dataset.taskId);
+                }
+            });
+
+            // 為「重設目標」按鈕添加事件監聽器
+            resetGoalsButton.addEventListener('click', () => {
+                // 清除所有相關的本地儲存數據
+                localStorage.clear(); // 清空所有本地儲存，回到初始狀態
+
+                showPage('setupPage');
+                // 重置設定頁面的表單
+                document.getElementById('mainGoal').value = '';
+                document.getElementById('completionTime').value = '';
+                document.querySelectorAll('input[name="habitType"]:checked').forEach(cb => cb.checked = false);
+                document.getElementById('habitStackingIdeas').value = '';
+                document.getElementById('restTimePreference').value = '';
+                updateStatusDisplay(); // 重置後更新顯示
+            });
+        });
+    </script>
+</body>
+</html>
