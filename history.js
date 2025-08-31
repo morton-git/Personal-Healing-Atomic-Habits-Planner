@@ -69,45 +69,43 @@ function addDailyHistoryRecord() {
 // 請在程序初始化時呼叫此函數
 addDailyHistoryRecord();
 
-// 新增：自動生成並下載 CSV 檔案
+// 修改：更新生成並下載 CSV 檔案的函式，CSV 標頭與欄位更新
 function generateAndDownloadCSV() {
-    // 從 localStorage 取得歷史紀錄 (期望結構：{date, totalPoints, mood, checkInReason, consecutiveDays})
     const historyData = JSON.parse(localStorage.getItem('history')) || [];
-    // 定義 CSV 標頭，參考 CSV 檔案格式
-    let csvContent = "日期 (Date),總累積心質點(Total Points},今日心情(Today's Mood),連續打勾理由(Check-in Reason),連續打勾天數(Consecutive Days)\n";
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "日期,總累積心質點,今日心情,連續打勾理由,連續打勾天數\n"; // 更新 CSV 標頭
     historyData.forEach(record => {
-        csvContent += `${record.date},${record.totalPoints || 0},${record.mood || ''},${record.checkInReason || ''},${record.consecutiveDays || 0}\n`;
+        csvContent += `${record.date},${record.totalLightPoints || 0},${record.todayMood || ''},${record.checkInReason || ''},${record.consecutiveDays || 0}\n`;
     });
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "history.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "history.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
-// 修改：處理 CSV 匯入，根據 CSV 填充任務名稱與心情紀錄
+// 修改：更新 CSV 匯入函式，根據新的 CSV 標頭解析資料
 function handleCSVImport(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const text = e.target.result;
-            const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+            const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
             if (lines.length < 2) {
                 alert('CSV 文件格式錯誤。');
                 return;
             }
             const headers = lines[0].split(',').map(h => h.trim());
             const dateIndex = headers.indexOf("日期");
-            const taskIndex = headers.indexOf("任務名稱");
-            const moodIndex = headers.indexOf("心情");
-            const progressIndex = headers.indexOf("進度");
-            if (dateIndex === -1 || taskIndex === -1 || moodIndex === -1 || progressIndex === -1) {
-                alert("CSV 標頭格式錯誤，請確認欄位名稱為：日期, 任務名稱, 心情, 進度");
+            const totalPointsIndex = headers.indexOf("總累積心質點");
+            const moodIndex = headers.indexOf("今日心情");
+            const reasonIndex = headers.indexOf("連續打勾理由");
+            const consecutiveIndex = headers.indexOf("連續打勾天數");
+            if (dateIndex === -1 || totalPointsIndex === -1 || moodIndex === -1 || reasonIndex === -1 || consecutiveIndex === -1) {
+                alert("CSV 標頭格式錯誤，請確認欄位名稱為：日期, 總累積心質點, 今日心情, 連續打勾理由, 連續打勾天數");
                 return;
             }
             const newData = [];
@@ -116,20 +114,23 @@ function handleCSVImport(event) {
                 if (cols.length < headers.length) continue;
                 newData.push({
                     date: cols[dateIndex] || "",
-                    task: cols[taskIndex] || "",
-                    mood: cols[moodIndex] || "",
-                    progress: cols[progressIndex] || ""
+                    totalLightPoints: cols[totalPointsIndex] || 0,
+                    todayMood: cols[moodIndex] || "",
+                    checkInReason: cols[reasonIndex] || "",
+                    consecutiveDays: cols[consecutiveIndex] || 0
                 });
             }
             localStorage.setItem('history', JSON.stringify(newData));
-            loadHistoryTable();
+            if (typeof loadHistoryTable === 'function') {
+                loadHistoryTable();
+            }
             alert('CSV 匯入成功！');
         };
         reader.readAsText(file);
     }
 }
 
-// 新增：更新連續打勾理由至歷史紀錄（CSV）資料的函式
+// 修改：更新連續打勾理由保存函式，支援新欄位
 function saveStreakReasonToHistory() {
     const streakInput = document.getElementById('streakReasonInput');
     if (!streakInput) {
@@ -140,14 +141,13 @@ function saveStreakReasonToHistory() {
     const todayString = new Date().toDateString();
     let historyData = JSON.parse(localStorage.getItem('history')) || [];
     
-    // 找出今日的記錄，如無則新增一筆
+    // 找出今日記錄，或新增一筆新記錄
     let record = historyData.find(item => item.date === todayString);
     if (!record) {
         record = {
             date: todayString,
-            task: '',
-            mood: '',
-            progress: '',
+            totalLightPoints: 0,
+            todayMood: '',
             checkInReason: reason,
             consecutiveDays: 0
         };
