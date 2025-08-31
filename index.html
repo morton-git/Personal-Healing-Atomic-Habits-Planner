@@ -13,9 +13,10 @@
     <!-- 網站圖示 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     <!-- 引入 Tailwind CSS CDN，用於快速美觀的樣式設計 -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- If running locally you may encounter CORS errors. Use a local server (e.g., Live Server or http://localhost) to avoid this issue -->
+    <script crossorigin="anonymous" src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts：Inter 用於通用字體，Noto Sans TC 用於中文，Playfair Display 用於標題斜體 -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400,700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
     <style>
         /* 定義 CSS 變數，方便統一管理顏色和字體 */
         :root {
@@ -1083,10 +1084,8 @@
                 <button class="action-button" id="resetGoalsButton" aria-label="重設目標">重設目標</button>
                 <!-- 新增：輸出專屬今日報告按鈕 -->
                 <button class="action-button" id="exportReportButton" aria-label="輸出專屬今日報告">📋 輸出專屬今日報告</button>
-                <!-- 新增：匯出數據說明按鈕 -->
-                <button class="action-button" id="showExportDataModalButton" aria-label="匯出數據">💾 匯出數據</button>
-                <!-- 新增：匯入數據說明按鈕 -->
-                <button class="action-button" id="showImportDataModalButton" aria-label="匯入數據">📂 匯入數據</button>
+                <!-- 新增：查看歷史紀錄按鈕 -->
+                <button class="action-button" id="openHistoryModal" aria-label="📜 查看歷史紀錄"> 📜 查看歷史紀錄</button>
                 <!-- 新增：主題切換按鈕 -->
                 <button class="action-button" id="toggleThemeButton" aria-label="切換主題">🌙 切換主題</button>
             </div>
@@ -1276,9 +1275,40 @@
         </div>
     </div>
 
+    <!-- 修改歷史紀錄彈窗 div，從 style="display: none;" 改為使用 hidden 與 aria-hidden 屬性 -->
+    <!-- 修改：更新歷史紀錄彈窗中的 CSV 表格標頭，以符合 CSV 格式 (日期, 任務名稱, 心情, 進度) -->
+    <div id="historyModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-content">
+            <h2>歷史紀錄</h2>
+            <!-- 新增：篩選輸入框 -->
+            <input type="text" id="historyFilterInput" placeholder="篩選記錄..." oninput="filterHistoryRecords()">
+            <table id="historyTable" border="1">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>任務名稱</th>
+                        <th>心情</th>
+                        <th>進度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 表格內容將由 history.js 動態填充 -->
+                </tbody>
+            </table>
+            <!-- 分頁控制容器 -->
+            <div id="historyPagination" style="margin-top: 10px; text-align: center;">
+                <!-- 分頁資訊將由 history.js 動態生成 -->
+            </div>
+            <button class="action-button" onclick="downloadCSV()">下載 CSV</button>
+            <button class="action-button" onclick="importCSV()">匯入 CSV</button>
+            <input type="file" id="csvFileInput" style="display: none;" accept=".csv" onchange="handleCSVImport(event)">
+            <button class="action-button" onclick="closeHistoryModal()">關閉</button>
+        </div>
+    </div>
+
     <script>
         /**
-         * @file 個人療癒原子習慣計畫本 - 主應用程式邏輯
+         * @file 個人療癌原子習慣計畫本 - 主應用程式邏輯
          * @description 包含應用程式初始化、數據管理、UI 互動等功能。
          */
 
@@ -1384,43 +1414,6 @@
                     "今日適合穿上防風外套，即使天氣多變也能從容應對。<span>（有備無患，讓心靈更安定。）</span>",
                     "如果對環保議題有興趣，可以選擇永續材質的衣物。<span>（為地球盡一份心力，心靈也會感到富足。）</span>",
                     "今日可以嘗試將衣物進行色彩分類，讓衣櫃更整齊。<span>（秩序感，能帶來內心的平靜。）</span>",
-                    "選擇一件輕薄的圍巾，為你的穿搭增添一份優雅。<span>（小小的點綴，也能提升整體氣質。）</span>",
-                    "今日適合穿上你最喜歡的襪子，讓腳步也充滿樂趣。<span>（從細節處找到快樂，心靈也會感到滿足。）</span>",
-                    "如果對過敏體質敏感，選擇無化學添加的衣物。<span>（溫柔對待身體，它會回報你健康。）</span>",
-                    "今日可以為自己準備一套適合運動的服裝，隨時準備好動起來。<span>（為健康投資，是最好的回報。）</span>",
-                    "選擇一件有特殊紋理的衣物，感受那份獨特的觸感。<span>（觸覺的體驗，也能帶來心靈的愉悅。）</span>",
-                    "今日適合穿上你最舒適的內褲，從內而外感受自在。<span>（看不見的舒適，是真正的奢華。）</span>",
-                    "如果對時尚趨勢有興趣，可以關注一些設計師品牌。<span>（從美學中，找到靈感與啟發。）</span>",
-                    "今日可以嘗試將衣物進行真空收納，節省空間。<span>（整齊的環境，能帶來清爽的心情。）</span>",
-                    "選擇一件有紀念意義的衣物，讓它成為你力量的來源。<span>（回憶的溫暖，能給你前行的勇氣。）</span>",
-                    "今日適合穿上你最喜歡的帽子，為造型增添一份趣味。<span>（小小的改變，也能帶來大大的不同。）</span>"
-                ],
-                shelter: [
-                    "今日宜整理居家環境，讓空間煥然一新。<span>（外在的整潔，能帶來內心的清爽，讓心靈也找到秩序感。）</span>",
-                    "在家中點上香氛蠟燭，營造放鬆氛圍。<span>（讓香氣引導你進入一個寧靜的港灣，此刻的心靈需要被溫柔安撫。）</span>",
-                    "與家人共度居家時光，享受溫馨片刻。<span>（家的溫暖，是最好的充電站，讓心靈在愛中得到滋養。）</span>",
-                    "為家中添置一盆綠植，感受大自然的生機。<span>（一點綠意，就能為生活注入活力，讓心靈也感受到生命的躍動。）</span>",
-                    "今日適合安靜獨處，享受家的寧靜。<span>（在自己的小天地裡，找到專屬於你的平靜，此刻的你值得這份寧靜。）</span>",
-                    "如果感到壓力，不妨為臥室換個佈置，創造更舒適的睡眠環境。<span>（好的睡眠，是療癒身心的基礎，讓心靈在深層休息中恢復。）</span>",
-                    "今日可以為家中添購一件讓自己感到幸福的小物。<span>（小小的改變，也能帶來大大的愉悅，讓心靈被這份幸福感填滿。）</span>",
-                    "打開窗戶，讓陽光和微風輕撫你的家，也輕撫你的心。<span>（感受自然的流動，讓心靈得到片刻的自由。）</span>",
-                    "今日宜清理雜物，為心靈騰出更多空間。<span>（丟棄不必要的，才能擁抱更美好的。）</span>",
-                    "在客廳播放輕柔的音樂，讓旋律溫暖你的心。<span>（音樂是心靈的語言，能帶來深層的放鬆。）</span>",
-                    "今日適合在家中進行一次深度清潔，感受煥然一新的舒適。<span>（勞動的汗水，也能洗滌心靈的塵埃。）</span>",
-                    "為書房添置一盞溫暖的燈，營造舒適的閱讀氛圍。<span>（光線的溫柔，能讓心靈找到歸屬。）</span>",
-                    "今日可以嘗試在家中種植一些香草植物，感受自然的芬芳。<span>（親近自然，是療癒的源泉。）</span>",
-                    "如果空間允許，為自己打造一個專屬的冥想角落。<span>（一個專屬的空間，能讓心靈更好地對話。）</span>",
-                    "今日適合與寵物在家中玩耍，感受那份純粹的快樂。<span>（牠們的陪伴，是最好的心靈療癒。）</span>",
-                    "為浴室添置一些香氛產品，讓沐浴成為一種享受。<span>（洗去疲憊，也洗滌心靈。）</span>",
-                    "今日可以嘗試重新佈置家具，為家帶來新鮮感。<span>（小小的改變，也能帶來大大的不同。）</span>",
-                    "如果對居家佈置有興趣，可以參考一些設計師的案例。<span>（從美學中，找到生活的靈感。）</span>",
-                    "今日適合在陽台或窗邊，享受一杯咖啡或茶，感受片刻的寧靜。<span>（偷得浮生半日閒，心靈也隨之舒展。）</span>",
-                    "為廚房添置一些可愛的餐具，讓烹飪更有樂趣。<span>（生活的美好，藏在每個細節中。）</span>",
-                    "今日可以嘗試在家中進行一次斷網，享受與世隔絕的寧靜。<span>（遠離喧囂，心靈才能真正地休息。）</span>",
-                    "為臥室添置柔軟的床品，讓睡眠質量得到提升。<span>（高品質的休息，是療癒的基礎。）</span>",
-                    "今日適合在家中看一部溫馨的電影，讓心靈得到放鬆。<span>（故事的力量，能溫暖人心。）</span>",
-                    "如果對收納有困擾，可以學習一些收納技巧，讓家更整潔。<span>（整齊的環境，能帶來清爽的心情。）</span>",
-                    "今日可以為家中添購一件藝術品，提升空間的品味。<span>（藝術的薰陶，能滋養心靈。）</span>",
                     "選擇一款舒適的沙發，讓它成為你放鬆身心的最佳場所。<span>（身體的放鬆，能帶來心靈的平靜。）</span>",
                     "今日適合在家中進行一次大掃除，迎接新的開始。<span>（清理舊的，才能迎接新的能量。）</span>",
                     "為餐桌添置一些鮮花，讓用餐氛圍更愉悅。<span>（花朵的美麗，能點亮生活。）</span>",
@@ -1463,7 +1456,7 @@
                     "今日適合搭乘觀光巴士，輕鬆遊覽城市的主要景點。<span>（放鬆身心，享受被服務的舒適。）</span>",
                     "如果對美食有追求，可以規劃一趟美食之旅。<span>（味蕾的滿足，是心靈的愉悅。）</span>",
                     "今日可以嘗試搭乘熱氣球，從空中俯瞰大地。<span>（獨特的視角，能帶來震撼的體驗。）</span>",
-                    "選擇一條有故事的老街，漫步其中，感受歲月痕跡。<span>（歷史的沉澱，能帶來心靈的寧靜。）</span>",
+                    "選擇一個有故事的老街，漫步其中，感受歲月痕跡。<span>（歷史的沉澱，能帶來心靈的寧靜。）</span>",
                     "今日適合搭乘高鐵，享受快速便捷的旅程。<span>（效率與舒適，可以兼得。）</span>",
                     "如果對攝影有興趣，可以帶上相機，記錄沿途的美景。<span>（捕捉美好，讓心靈充滿感恩。）</span>",
                     "今日可以規劃一次自行車環島，挑戰自己的耐力與毅力。<span>（每一次的堅持，都是對自我的超越。）</span>",
@@ -1769,15 +1762,17 @@
              */
             function showModal(modalElement, title) {
                 modalElement.classList.remove('hidden');
-                modalElement.setAttribute('aria-hidden', 'false'); // 顯示時設置 aria-hidden 為 false
-                // Find the h3 element within the specific modal and set its text content
+                // Remove attributes that may block focus from assistive technologies
+                modalElement.removeAttribute('aria-hidden');
+                modalElement.removeAttribute('inert');
+                // 強制重繪以觸發過渡動畫
+                void modalElement.offsetWidth;
+                modalElement.classList.add('show');
+                // 設定標題
                 const modalTitleElement = modalElement.querySelector('h3');
                 if (modalTitleElement) {
                     modalTitleElement.textContent = title;
                 }
-                // 強制重繪以觸發過渡動畫
-                void modalElement.offsetWidth;
-                modalElement.classList.add('show');
                 // 將焦點設定到模態框內的第一個可互動元素，以提升可訪問性
                 const focusableElements = modalElement.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
                 const firstFocusableElement = focusableElements[0];
@@ -1795,7 +1790,8 @@
                 modalElement.classList.remove('show');
                 modalElement.addEventListener('transitionend', function handler() {
                     modalElement.classList.add('hidden');
-                    modalElement.setAttribute('aria-hidden', 'true'); // 隱藏時設置 aria-hidden 為 true
+                    // Instead of using aria-hidden, add the inert attribute to prevent focus
+                    modalElement.setAttribute('inert', '');
                     modalElement.removeEventListener('transitionend', handler);
                 }, { once: true });
             }
@@ -1998,13 +1994,121 @@
                 }
             }
 
+            // 新增：儲存 CSV 資料 (直接以字串存取)
+            function setCSVItem(key, csvData) {
+                try {
+                    localStorage.setItem(key, csvData);
+                    return true;
+                } catch (error) {
+                    console.error("儲存 CSV 資料時發生錯誤:", error);
+                    return false;
+                }
+            }
+
+            // 新增：讀取 CSV 資料
+            function getCSVItem(key) {
+                try {
+                    return localStorage.getItem(key) || '';
+                } catch (error) {
+                    console.error("讀取 CSV 資料時發生錯誤:", error);
+                    return '';
+                }
+            }
+
             return {
                 getItem,
                 setItem,
                 removeItem,
-                clearAll
+                clearAll,
+                setCSVItem,
+                getCSVItem
             };
         })();
+        // 假設歷史數據儲存在 localStorage，結構如：[{date: '2025-08-31', task: '學習', mood: '開心', progress: '完成'}]
+const historyData = JSON.parse(localStorage.getItem('history')) || [];
+
+// 開啟歷史 modal 並載入表格
+function openHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    Utils.showModal(modal, '歷史紀錄');
+    loadHistoryTable();
+}
+
+// 關閉歷史 modal
+function closeHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    Utils.hideModal(modal);
+}
+
+// 即時載入表格數據
+function loadHistoryTable() {
+    const tableBody = document.querySelector('#historyTable tbody');
+    tableBody.innerHTML = ''; // 清空舊數據
+    historyData.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.date}</td>
+            <td>${item.task}</td>
+            <td>${item.mood}</td>
+            <td>${item.progress}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// 下載 CSV
+function downloadCSV() {
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "日期,任務名稱,心情,進度\n"; // CSV 標頭
+    historyData.forEach(item => {
+        csvContent += `${item.date},${item.task},${item.mood},${item.progress}\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "history.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// 觸發 CSV 匯入
+function importCSV() {
+    document.getElementById('csvFileInput').click();
+}
+
+// 處理 CSV 匯入
+function handleCSVImport(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const lines = text.split('\n').slice(1); // 跳過標頭
+            const newData = [];
+            lines.forEach(line => {
+                if (line.trim()) {
+                    const [date, task, mood, progress] = line.split(',');
+                    newData.push({ date, task, mood, progress });
+                }
+            });
+            historyData.length = 0; // 清空舊數據（或用 push 追加，依需求調整）
+            historyData.push(...newData);
+            localStorage.setItem('history', JSON.stringify(historyData));
+            loadHistoryTable(); // 即時更新表格
+            alert('CSV 匯入成功！');
+        };
+        reader.readAsText(file);
+    }
+}
+
+// 點擊 modal 外部關閉
+window.onclick = function(event) {
+    const modal = document.getElementById('historyModal');
+    if (event.target === modal) {
+        Utils.hideModal(modal);
+    }
+};
 
         // ====================================================================
         // 5. 任務管理 (TaskManager)
@@ -2511,10 +2615,10 @@
                     if (!messages || messages.length === 0) {
                         return "今天沒有特別的靈感，但請相信美好即將發生。<span>（生活總有驚喜，用心去感受。）</span>";
                     }
-                    return messages[Math.floor(Math.random() * messages.length)];
+ return messages[Math.floor(Math.random() * messages.length)];
                 } catch (error) {
                     console.error("生成籤詩時發生錯誤:", error);
-                    return "籤詩生成失敗，但請保持樂觀。<span>（有時候，最好的指引來自內心。）</span>";
+                                       return "籤詩生成失敗，但請保持樂觀。<span>（有時候，最好的指引來自內心。）</span>";
                 }
             }
 
@@ -3170,13 +3274,17 @@
                 });
                 Elements.exportReportButton.addEventListener('click', generateAndCopyReport);
 
-                // New Import/Export Modal Triggers
-                Elements.showExportDataModalButton.addEventListener('click', () => {
-                    Utils.showModal(Elements.exportDataModal, '匯出數據說明');
-                });
-                Elements.showImportDataModalButton.addEventListener('click', () => {
-                    Utils.showModal(Elements.importDataModal, '匯入數據說明');
-                });
+                // Import/Export Modal Triggers
+                if (Elements.showExportDataModalButton) {
+                    Elements.showExportDataModalButton.addEventListener('click', () => {
+                        Utils.showModal(Elements.exportDataModal, '匯出數據說明');
+                    });
+                }
+                if (Elements.showImportDataModalButton) {
+                    Elements.showImportDataModalButton.addEventListener('click', () => {
+                        Utils.showModal(Elements.importDataModal, '匯入數據說明');
+                    });
+                }
 
                 // Buttons inside new modals
                 Elements.confirmExportButton.addEventListener('click', () => {
@@ -3202,7 +3310,9 @@
                         TaskManager.deleteTask(event.target.dataset.taskId); // 使用自定義確認框
                     }
                 });
-
+                // 新增：查看歷史紀錄按鈕事件
+                const openHistoryModalButton = document.getElementById('openHistoryModal');
+                openHistoryModalButton.addEventListener('click', openHistoryModal);
                 // 重設目標按鈕 (Modified to call App.init for full reset)
                 Elements.resetGoalsButton.addEventListener('click', () => {
                     Utils.showConfirmModal(
@@ -3282,6 +3392,10 @@
          * @param {Error} error - 錯誤物件。
          */
         window.onerror = function(message, source, lineno, colno, error) {
+            // 忽略僅顯示 "Script error." 的訊息 (無法取得詳細資訊)
+            if (message === 'Script error.' && !source) {
+                return true;
+            }
             console.error("Unhandled error caught by window.onerror:", { message, source, lineno, colno, error });
             let errorMessage = CONSTANTS.ERROR_MESSAGES.UNKNOWN_ERROR;
             if (message) {
@@ -3295,5 +3409,36 @@
         // 頁面載入完成後執行應用程式初始化
         document.addEventListener('DOMContentLoaded', App.init);
     </script>
+    <script src="history.js"></script>
+  
+  <!-- 新增測試腳本以驗證 CSV 功能 -->
+ //<script>
+//(function(){
+  //console.log("開始測試 CSV 功能...");
+
+    // 測試：模擬歷史紀錄數據
+//  const testHistory = [
+//    { date: "2023-10-01", task: "學習新技術", mood: "😊", progress: "完成" },
+//    { date: "2023-10-02", task: "運動", mood: "💪", progress: "進行中" }
+//  ];
+//  localStorage.setItem('history', JSON.stringify(testHistory));
+    
+    // 測試：呼叫下載 CSV 功能 (下載動作可能會觸發瀏覽器的檔案下載)
+   //onsole.log("測試 downloadCSV() 函式");
+    // 若不希望自動觸發下載，可將下行程式碼註解起來
+    // downloadCSV();
+
+    // 測試：呼叫 loadHistoryTable 以檢查表格正確渲染
+   //onsole.log("測試 loadHistoryTable() 函式");
+    // (typeof loadHistoryTable === 'function') {
+   //  loadHistoryTable();
+   //  console.log("loadHistoryTable 已經執行，請檢查歷史紀錄表格。");
+  //} else {
+  //   console.error("找不到 loadHistoryTable 函式");
+ // }
+
+  //console.log("CSV 功能測試腳本執行完畢。請檢查瀏覽器 Console 與頁面上歷史紀錄表格的內容。");
+//})();
+</script>
 </body>
 </html>
