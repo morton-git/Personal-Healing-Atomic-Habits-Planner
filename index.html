@@ -3277,7 +3277,7 @@ window.onclick = function(event) {
                 });
                 Elements.exportReportButton.addEventListener('click', generateAndCopyReport);
 
-                // Import/Export Modal Triggers
+                // Import/Export Modal Triggers - 僅在相關元素存在時註冊事件
                 if (Elements.showExportDataModalButton) {
                     Elements.showExportDataModalButton.addEventListener('click', () => {
                         Utils.showModal(Elements.exportDataModal, '匯出數據說明');
@@ -3288,67 +3288,18 @@ window.onclick = function(event) {
                         Utils.showModal(Elements.importDataModal, '匯入數據說明');
                     });
                 }
-
+                
                 // Buttons inside new modals
                 Elements.confirmExportButton.addEventListener('click', () => {
-                    App.exportAllData();
                     Utils.hideModal(Elements.exportDataModal);
                 });
                 Elements.actualImportFileInput.addEventListener('change', (event) => {
-                    App.importData(event);
                     Utils.hideModal(Elements.importDataModal);
                 });
                 Elements.cancelImportButton.addEventListener('click', () => Utils.hideModal(Elements.importDataModal));
                 Elements.cancelExportButton.addEventListener('click', () => Utils.hideModal(Elements.exportDataModal));
-
-                Elements.toggleThemeButton.addEventListener('click', toggleTheme); // 切換主題
-
-                // 任務列表事件委託 (處理勾選、編輯、刪除)
-                Elements.taskListBody.addEventListener('click', (event) => {
-                    if (event.target.type === 'checkbox' && event.target.dataset.taskId) {
-                        TaskManager.saveTaskState(event.target.dataset.taskId, event.target.checked);
-                    } else if (event.target.classList.contains('edit-button') && event.target.dataset.taskId) {
-                        TaskManager.showEditTaskModal(event.target.dataset.taskId);
-                    } else if (event.target.classList.contains('delete-button') && event.target.dataset.taskId) {
-                        TaskManager.deleteTask(event.target.dataset.taskId); // 使用自定義確認框
-                    }
-                });
-                // 新增：查看歷史紀錄按鈕事件
-                const openHistoryModalButton = document.getElementById('openHistoryModal');
-                openHistoryModalButton.addEventListener('click', openHistoryModal);
-                // 重設目標按鈕 (Modified to call App.init for full reset)
-                Elements.resetGoalsButton.addEventListener('click', () => {
-                    Utils.showConfirmModal(
-                        '重設所有目標',
-                        '確定要重設所有目標和數據嗎？此操作不可逆。',
-                        (confirmed) => {
-                            if (confirmed) {
-                                console.log("Confirm accepted for Reset Goals.");
-                                Utils.showLoading();
-                                if (StorageManager.clearAll()) {
-                                    App.init(); // Full re-initialization
-                                }
-                                Utils.hideLoading();
-                            } else {
-                                console.log("Confirm cancelled for Reset Goals.");
-                            }
-                        }
-                    );
-                });
-
-                // 新增：監聽 "saveStreakReasonButton" 按鍵點擊事件，儲存連續打勾理由
-                Elements.saveStreakReasonButton.addEventListener('click', () => {
-                    const reason = Elements.streakReasonInput.value.trim();
-                    if (reason) {
-                        StorageManager.setItem(CONSTANTS.STORAGE_KEYS.STREAK_REASON, reason);
-                        alert('連續打勾理由已儲存！');
-                    } else {
-                        Utils.showError('請輸入理由再儲存！', Elements.streakReasonInput);
-                    }
-                });
-
-                // 首次載入時請求通知權限 (可考慮在用戶第一次完成任務時請求)
-                Utils.requestNotificationPermission();
+                
+                // ...existing code...
             }
 
             /**
