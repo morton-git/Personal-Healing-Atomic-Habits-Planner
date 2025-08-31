@@ -188,20 +188,129 @@ function updateHistoryRecord() {
     localStorage.setItem('history', JSON.stringify(historyData));
 }
 
-// 修改：載入歷史紀錄表格前先更新紀錄
+// 修改：載入歷史紀錄表格前先更新// 載入歷史紀錄表格（支援分頁和搜尋）
+let currentPage = 1;
+const recordsPerPage = 10;
+
+function filterHistoryRecords() {
+    const filter = document.getElementById('historyFilterInput').value.toLowerCase();
+    const rows = document.querySelectorAll('#historyTable tbody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+    
+    // 重置分頁到第一頁
+    currentPage = 1;
+    updatePagination();
+}
+
+function updatePagination() {
+    const rows = Array.from(document.querySelectorAll('#historyTable tbody tr'));
+    const visibleRows = rows.filter(row => row.style.display !== 'none');
+    const totalPages = Math.ceil(visibleRows.length / recordsPerPage);
+    
+    const pagination = document.getElementById('historyPagination');
+    pagination.innerHTML = '';
+    
+    // 上一頁按鈕
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '上一頁';
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage();
+        }
+    };
+    pagination.appendChild(prevButton);
+    
+    // 頁碼按鈕
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = i === currentPage ? 'active' : '';
+        pageButton.onclick = () => {
+            currentPage = i;
+            showPage();
+        };
+        pagination.appendChild(pageButton);
+    }
+    
+    // 下一頁按鈕
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '下一頁';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPage();
+        }
+    };
+    pagination.appendChild(nextButton);
+    
+    // 顯示當前頁面資訊
+    const pageInfo = document.createElement('span');
+    const startRecord = (currentPage - 1) * recordsPerPage + 1;
+    const endRecord = Math.min(currentPage * recordsPerPage, visibleRows.length);
+    pageInfo.textContent = ` 顯示 ${startRecord}-${endRecord} 筆，共 ${visibleRows.length} 筆`;
+    pagination.appendChild(pageInfo);
+}
+
+function showPage() {
+    const rows = Array.from(document.querySelectorAll('#historyTable tbody tr'));
+    const visibleRows = rows.filter(row => row.style.display !== 'none');
+    const start = (currentPage - 1) * recordsPerPage;
+    const end = start + recordsPerPage;
+    
+    rows.forEach((row, index) => {
+        const isVisible = visibleRows.includes(row);
+        const isInPage = isVisible && index >= start && index < end;
+        row.style.display = isInPage ? '' : 'none';
+    });
+    
+    updatePagination();
+}
+
+// 載入歷史紀錄表格
 function loadHistoryTable() {
     updateHistoryRecord(); // 確保最新狀態已紀錄
     const tableBody = document.querySelector('#historyTable tbody');
-    tableBody.innerHTML = ''; // ...existing code...
-    const historyData = JSON.parse(localStorage.getItem('history')) || [];
+    tableBody.innerHTML = '';
+    
+    let historyData = JSON.parse(localStorage.getItem('history')) || [];
+    
+    // 按日期降序排序
+    historyData.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    if (historyData.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="10" class="text-center">暫無歷史記錄</td>';
+        tableBody.appendChild(row);
+        return;
+    }
+    
+    // 格式化日期函數
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return isNaN(date.getTime()) ? dateString : `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+    };
+
     historyData.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item.date}</td>
-            <td>${item.totalLightPoints || ''}</td>
+            <td>${formatDate(item.date)}</td>
+            <td>${item.mainGoal || ''}</td>
+            <td>${item.completionTime || ''}</td>
+            <td>${item.habitTypes || ''}</td>
+            <td>${item.habitStackingIdeas || ''}</td>
+            <td>${item.restTimePreference || ''}</td>
+            <td>${item.totalLightPoints || '0'}</td>
             <td>${item.todayMood || ''}</td>
             <td>${item.checkInReason || ''}</td>
-            <td>${item.consecutiveDays || ''}</td>
+            <td>${item.consecutiveDays || '0'}</td>
         `;
         tableBody.appendChild(row);
     });
