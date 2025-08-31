@@ -2259,7 +2259,7 @@ window.onclick = function(event) {
 
                     // 檢查是否所有任務都已完成
                     const allTasks = StorageManager.getItem(CONSTANTS.STORAGE_KEYS.USER_TASKS, []);
-                    // 只有當所有當前顯示的任務都被勾選時才觸發通知
+                    // 只有當所有當前顯示的任務都被勾選時才觸发通知
                     const allDisplayedTasksCompleted = allTasks.length > 0 && allTasks.every(task => savedTaskStates[task.id]);
                     if (allDisplayedTasksCompleted) {
                         Utils.sendNotification("恭喜！所有今日任務已完成！", {
@@ -3301,7 +3301,19 @@ window.onclick = function(event) {
                 Elements.cancelImportButton.addEventListener('click', () => Utils.hideModal(Elements.importDataModal));
                 Elements.cancelExportButton.addEventListener('click', () => Utils.hideModal(Elements.exportDataModal));
                 
-                // ...existing code...
+                // 修復：重設目標與切換主題不能作動的問題
+document.getElementById('resetGoalsButton').addEventListener('click', function(){
+    // 清除用戶設定並回到設定頁面
+    localStorage.removeItem('userSettings');
+    document.getElementById('setupPage').classList.remove('hidden');
+    document.getElementById('mainAppPage').classList.add('hidden');
+});
+
+document.getElementById('toggleThemeButton').addEventListener('click', function(){
+    document.body.classList.toggle('dark-mode');
+    var isDark = document.body.classList.contains('dark-mode');
+    this.textContent = isDark ? '☀️ 切換主題' : '🌙 切換主題';
+});
             }
 
             /**
