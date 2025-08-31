@@ -12,9 +12,8 @@
 
     <!-- 網站圖示 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
-    <!-- 引入 Tailwind CSS CDN，用於快速美觀的樣式設計 -->
-    <!-- If running locally you may encounter CORS errors. Use a local server (e.g., Live Server or http://localhost) to avoid this issue -->
-    <script crossorigin="anonymous" src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts：Inter 用於通用字體，Noto Sans TC 用於中文，Playfair Display 用於標題斜體 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400,700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
     <style>
@@ -1676,6 +1675,7 @@
             /**
              * 顯示指定頁面，隱藏其他頁面。
              * @param {string} pageId - 要顯示的頁面 ID ('setupPage' 或 'mainAppPage')。
+             * @param {string} pageId - 要顯示的頁面 ID ('setupPage' 或 'mainAppPage')。
              * @memberof Utils
              */
             function showPage(pageId) {
@@ -2609,6 +2609,7 @@ window.onclick = function(event) {
                     if (theme === 'random') {
                         const themes = Object.keys(CONSTANTS.ORACLE_MESSAGES);
                         selectedTheme = themes[Math.floor(Math.random() * themes.length)];
+
                     }
 
                     const messages = CONSTANTS.ORACLE_MESSAGES[selectedTheme];
