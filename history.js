@@ -128,3 +128,43 @@ function handleCSVImport(event) {
         reader.readAsText(file);
     }
 }
+
+// 新增：更新連續打勾理由至歷史紀錄（CSV）資料的函式
+function saveStreakReasonToHistory() {
+    const streakInput = document.getElementById('streakReasonInput');
+    if (!streakInput) {
+        console.error("找不到 streakReasonInput 元素");
+        return;
+    }
+    const reason = streakInput.value.trim();
+    const todayString = new Date().toDateString();
+    let historyData = JSON.parse(localStorage.getItem('history')) || [];
+    
+    // 找出今日的記錄，如無則新增一筆
+    let record = historyData.find(item => item.date === todayString);
+    if (!record) {
+        record = {
+            date: todayString,
+            task: '',
+            mood: '',
+            progress: '',
+            checkInReason: reason,
+            consecutiveDays: 0
+        };
+        historyData.push(record);
+    } else {
+        record.checkInReason = reason;
+    }
+    localStorage.setItem('history', JSON.stringify(historyData));
+    alert("連續打勾理由已保存至 CSV 歷史紀錄！");
+}
+
+// 監聽連續打勾理由儲存按鈕
+document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('saveStreakReasonButton');
+    if (saveButton) {
+        saveButton.addEventListener('click', saveStreakReasonToHistory);
+    } else {
+        console.warn("saveStreakReasonButton 元素未找到");
+    }
+});
