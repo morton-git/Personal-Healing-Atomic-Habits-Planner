@@ -3308,16 +3308,19 @@ window.onclick = function(event) {
                 
                 // 修復：重設目標與切換主題不能作動的問題
 document.getElementById('resetGoalsButton').addEventListener('click', function(){
-    // 清除用戶設定並回到設定頁面
-    localStorage.removeItem('userSettings');
-    document.getElementById('setupPage').classList.remove('hidden');
-    document.getElementById('mainAppPage').classList.add('hidden');
-});
-
-document.getElementById('toggleThemeButton').addEventListener('click', function(){
-    document.body.classList.toggle('dark-mode');
-    var isDark = document.body.classList.contains('dark-mode');
-    this.textContent = isDark ? '☀️ 切換主題' : '🌙 切換主題';
+    Utils.showConfirmModal('確認重設目標', '確定要重設嗎?', function(confirmed) {
+        if (confirmed) {
+            // 清除用戶設定並重置累積與今日心質點
+            localStorage.removeItem('userSettings');
+            localStorage.setItem('totalLightPoints', 0);
+            localStorage.setItem('todayLightPoints', 0);
+            document.getElementById('setupPage').classList.remove('hidden');
+            document.getElementById('mainAppPage').classList.add('hidden');
+            // 更新 UI 上的數值
+            document.getElementById('totalLightPoints').textContent = 0;
+            document.getElementById('todayLightPoints').textContent = 0;
+        }
+    });
 });
             }
 
