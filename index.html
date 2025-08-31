@@ -3336,6 +3336,17 @@ window.onclick = function(event) {
                     );
                 });
 
+                // 新增：監聽 "saveStreakReasonButton" 按鍵點擊事件，儲存連續打勾理由
+                Elements.saveStreakReasonButton.addEventListener('click', () => {
+                    const reason = Elements.streakReasonInput.value.trim();
+                    if (reason) {
+                        StorageManager.setItem(CONSTANTS.STORAGE_KEYS.STREAK_REASON, reason);
+                        alert('連續打勾理由已儲存！');
+                    } else {
+                        Utils.showError('請輸入理由再儲存！', Elements.streakReasonInput);
+                    }
+                });
+
                 // 首次載入時請求通知權限 (可考慮在用戶第一次完成任務時請求)
                 Utils.requestNotificationPermission();
             }
