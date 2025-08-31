@@ -130,7 +130,61 @@ function handleCSVImport(event) {
     }
 }
 
-// 修改：更新連續打勾理由保存函式，支援新欄位
+// 新增：更新今日紀錄中各欄位資料
+function updateHistoryRecord() {
+    const todayString = new Date().toDateString();
+    let historyData = JSON.parse(localStorage.getItem('history')) || [];
+    let record = historyData.find(item => item.date === todayString);
+
+    // 從 DOM 元素取得最新數值
+    const totalLightPoints = document.getElementById('totalLightPoints')
+        ? document.getElementById('totalLightPoints').innerText : '';
+    const todayMood = document.getElementById('currentMood')
+        ? document.getElementById('currentMood').innerText : '';
+    const checkInReason = document.getElementById('streakReasonInput')
+        ? document.getElementById('streakReasonInput').value : '';
+    const consecutiveDays = document.getElementById('streakDays')
+        ? document.getElementById('streakDays').innerText : '';
+
+    if (!record) {
+        record = {
+            date: todayString,
+            totalLightPoints,
+            todayMood,
+            checkInReason,
+            consecutiveDays
+        };
+        historyData.push(record);
+    } else {
+        record.totalLightPoints = totalLightPoints;
+        record.todayMood = todayMood;
+        record.checkInReason = checkInReason;
+        record.consecutiveDays = consecutiveDays;
+    }
+    localStorage.setItem('history', JSON.stringify(historyData));
+}
+
+// 修改：載入歷史紀錄表格前先更新紀錄
+function loadHistoryTable() {
+    updateHistoryRecord(); // 確保最新狀態已紀錄
+    const tableBody = document.querySelector('#historyTable tbody');
+    tableBody.innerHTML = ''; // ...existing code...
+    const historyData = JSON.parse(localStorage.getItem('history')) || [];
+    historyData.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.date}</td>
+            <td>${item.totalLightPoints || ''}</td>
+            <td>${item.todayMood || ''}</td>
+            <td>${item.checkInReason || ''}</td>
+            <td>${item.consecutiveDays || ''}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+    // ...existing code...
+}
+
+// 修改：更新連續打勾理由保存函式，完成後同樣更新歷史紀錄
 function saveStreakReasonToHistory() {
     const streakInput = document.getElementById('streakReasonInput');
     if (!streakInput) {
@@ -138,24 +192,8 @@ function saveStreakReasonToHistory() {
         return;
     }
     const reason = streakInput.value.trim();
-    const todayString = new Date().toDateString();
-    let historyData = JSON.parse(localStorage.getItem('history')) || [];
-    
-    // 找出今日記錄，或新增一筆新記錄
-    let record = historyData.find(item => item.date === todayString);
-    if (!record) {
-        record = {
-            date: todayString,
-            totalLightPoints: 0,
-            todayMood: '',
-            checkInReason: reason,
-            consecutiveDays: 0
-        };
-        historyData.push(record);
-    } else {
-        record.checkInReason = reason;
-    }
-    localStorage.setItem('history', JSON.stringify(historyData));
+    // 呼叫通用更新函式，讓其它狀態欄位也一併記錄
+    updateHistoryRecord();
     alert("連續打勾理由已保存至 CSV 歷史紀錄！");
 }
 
