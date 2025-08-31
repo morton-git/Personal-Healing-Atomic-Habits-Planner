@@ -38,7 +38,12 @@ function showHistoryModal() {
 
 // 監聽「更新歷史紀錄」按鈕
 function initHistoryButton() {
-    document.getElementById('updateHistoryBtn').addEventListener('click', showHistoryModal);
+    const btn = document.getElementById('openHistoryModal');
+    if (btn) {
+        btn.addEventListener('click', openHistoryModal);
+    } else {
+        console.warn("openHistoryModal button not found");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initHistoryButton);
