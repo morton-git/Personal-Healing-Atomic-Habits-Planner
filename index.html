@@ -1033,7 +1033,10 @@
                     今日心情 😊<span id="currentMood" aria-live="polite">尚未記錄</span>
                 </div>
                 <div class="status-item streak-reason">
-                    連續打勾理由 📝<input type="text" id="streakReasonInput" placeholder="例如：為了更好的自己！" aria-label="連續打勾理由">
+                    連續打勾理由 📝
+                    <input type="text" id="streakReasonInput" placeholder="例如：為了更好的自己！" aria-label="連續打勾理由">
+                    <!-- 新增儲存按鈕 -->
+                    <button id="saveStreakReasonButton" class="action-button" style="padding: 5px 10px; margin-left: 10px; font-size: 0.9em;">儲存理由</button>
                 </div>
                 <div class="status-item">
                     連續打勾天數 🔥<span id="streakDays" aria-live="polite">0</span>
@@ -1274,8 +1277,7 @@
         </div>
     </div>
 
-    <!-- 修改歷史紀錄彈窗 div，從 style="display: none;" 改為使用 hidden 與 aria-hidden 屬性 -->
-    <!-- 修改：更新歷史紀錄彈窗中的 CSV 表格標頭，以符合 CSV 格式 (日期, 任務名稱, 心情, 進度) -->
+    <!-- 修改歷史紀錄彈窗 div，更新表格標頭 -->
     <div id="historyModal" class="modal hidden" aria-hidden="true">
         <div class="modal-content">
             <h2>歷史紀錄</h2>
