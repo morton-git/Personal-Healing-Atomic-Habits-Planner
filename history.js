@@ -73,9 +73,10 @@ addDailyHistoryRecord();
 function generateAndDownloadCSV() {
     const historyData = JSON.parse(localStorage.getItem('history')) || [];
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "日期,總累積心質點,今日心情,連續打勾理由,連續打勾天數\n"; // 更新 CSV 標頭
+    // 更新 CSV 標頭，包含新欄位
+    csvContent += "日期,想完成甚麼,多久時間內完成,習慣類型,比較有空或想做這些事,每日休息,總累積心質點,今日心情,連續打勾理由,連續打勾天數\n";
     historyData.forEach(record => {
-        csvContent += `${record.date},${record.totalLightPoints || 0},${record.todayMood || ''},${record.checkInReason || ''},${record.consecutiveDays || 0}\n`;
+        csvContent += `${record.date},${record.mainGoal || ''},${record.completionTime || ''},${record.habitTypes || ''},${record.habitStackingIdeas || ''},${record.restTimePreference || ''},${record.totalLightPoints || 0},${record.todayMood || ''},${record.checkInReason || ''},${record.consecutiveDays || 0}\n`;
     });
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -86,7 +87,6 @@ function generateAndDownloadCSV() {
     document.body.removeChild(link);
 }
 
-// 修改：更新 CSV 匯入函式，根據新的 CSV 標頭解析資料
 function handleCSVImport(event) {
     const file = event.target.files[0];
     if (file) {
@@ -100,12 +100,17 @@ function handleCSVImport(event) {
             }
             const headers = lines[0].split(',').map(h => h.trim());
             const dateIndex = headers.indexOf("日期");
+            const mainGoalIndex = headers.indexOf("想完成甚麼");
+            const completionTimeIndex = headers.indexOf("多久時間內完成");
+            const habitTypesIndex = headers.indexOf("習慣類型");
+            const habitStackingIdeasIndex = headers.indexOf("比較有空或想做這些事");
+            const restTimePreferenceIndex = headers.indexOf("每日休息");
             const totalPointsIndex = headers.indexOf("總累積心質點");
             const moodIndex = headers.indexOf("今日心情");
             const reasonIndex = headers.indexOf("連續打勾理由");
             const consecutiveIndex = headers.indexOf("連續打勾天數");
-            if (dateIndex === -1 || totalPointsIndex === -1 || moodIndex === -1 || reasonIndex === -1 || consecutiveIndex === -1) {
-                alert("CSV 標頭格式錯誤，請確認欄位名稱為：日期, 總累積心質點, 今日心情, 連續打勾理由, 連續打勾天數");
+            if ([dateIndex, mainGoalIndex, completionTimeIndex, habitTypesIndex, habitStackingIdeasIndex, restTimePreferenceIndex, totalPointsIndex, moodIndex, reasonIndex, consecutiveIndex].includes(-1)) {
+                alert("CSV 標頭格式錯誤，請確認欄位名稱正確。");
                 return;
             }
             const newData = [];
@@ -114,6 +119,11 @@ function handleCSVImport(event) {
                 if (cols.length < headers.length) continue;
                 newData.push({
                     date: cols[dateIndex] || "",
+                    mainGoal: cols[mainGoalIndex] || "",
+                    completionTime: cols[completionTimeIndex] || "",
+                    habitTypes: cols[habitTypesIndex] || "",
+                    habitStackingIdeas: cols[habitStackingIdeasIndex] || "",
+                    restTimePreference: cols[restTimePreferenceIndex] || "",
                     totalLightPoints: cols[totalPointsIndex] || 0,
                     todayMood: cols[moodIndex] || "",
                     checkInReason: cols[reasonIndex] || "",
@@ -135,20 +145,29 @@ function updateHistoryRecord() {
     const todayString = new Date().toDateString();
     let historyData = JSON.parse(localStorage.getItem('history')) || [];
     let record = historyData.find(item => item.date === todayString);
-
-    // 從 DOM 元素取得最新數值
-    const totalLightPoints = document.getElementById('totalLightPoints')
-        ? document.getElementById('totalLightPoints').innerText : '';
-    const todayMood = document.getElementById('currentMood')
-        ? document.getElementById('currentMood').innerText : '';
-    const checkInReason = document.getElementById('streakReasonInput')
-        ? document.getElementById('streakReasonInput').value : '';
-    const consecutiveDays = document.getElementById('streakDays')
-        ? document.getElementById('streakDays').innerText : '';
-
+    
+    // 從設定表單取得欄位值
+    const mainGoal = document.getElementById('mainGoal') ? document.getElementById('mainGoal').value.trim() : '';
+    const completionTime = document.getElementById('completionTime') ? document.getElementById('completionTime').value.trim() : '';
+    const habitTypeElements = document.querySelectorAll('input[name="habitType"]:checked');
+    const habitTypes = habitTypeElements.length > 0 ? Array.from(habitTypeElements).map(el => el.value).join(',') : '';
+    const habitStackingIdeas = document.getElementById('habitStackingIdeas') ? document.getElementById('habitStackingIdeas').value.trim() : '';
+    const restTimePreference = document.getElementById('restTimePreference') ? document.getElementById('restTimePreference').value.trim() : '';
+    
+    // 從應用狀態取得其他數值
+    const totalLightPoints = document.getElementById('totalLightPoints') ? document.getElementById('totalLightPoints').innerText : '';
+    const todayMood = document.getElementById('currentMood') ? document.getElementById('currentMood').innerText : '';
+    const checkInReason = document.getElementById('streakReasonInput') ? document.getElementById('streakReasonInput').value : '';
+    const consecutiveDays = document.getElementById('streakDays') ? document.getElementById('streakDays').innerText : '';
+    
     if (!record) {
         record = {
             date: todayString,
+            mainGoal,
+            completionTime,
+            habitTypes,
+            habitStackingIdeas,
+            restTimePreference,
             totalLightPoints,
             todayMood,
             checkInReason,
@@ -156,6 +175,11 @@ function updateHistoryRecord() {
         };
         historyData.push(record);
     } else {
+        record.mainGoal = mainGoal;
+        record.completionTime = completionTime;
+        record.habitTypes = habitTypes;
+        record.habitStackingIdeas = habitStackingIdeas;
+        record.restTimePreference = restTimePreference;
         record.totalLightPoints = totalLightPoints;
         record.todayMood = todayMood;
         record.checkInReason = checkInReason;
